@@ -1,1 +1,12 @@
+# Disable all themes
+theme: ""
 
+# Tell Jekyll not to wrap things in HTML layouts
+layout: none
+
+# Basic Metadata
+title: Raw Index
+description: Plain text repository
+
+# Ensure all file types are accessible
+include: [".htaccess", "README.md", ".txt"]
