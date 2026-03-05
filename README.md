@@ -1,59 +1,72 @@
 # 🛡️ Pobfus v1.0 | The Monolith
-### *Advanced Lua Virtualization & Control-Flow Flattening*
+### *High-Density Lua Virtualization & Control-Flow Flattening*
 
-> [!CAUTION]
-> **STATUS: ⚠️ MAINTENANCE YELLOW**
-> The engine is currently undergoing "Hell-Mode" optimization. Logic stability is 98%. 
-> Current Version: 1.0-RC1 (Release Candidate)
+![Version](https://img.shields.io/badge/Version-1.0--Stable-green?style=for-the-badge&logo=github)
+![Build](https://img.shields.io/badge/Build-Success-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/Security-Hell--Mode-red?style=for-the-badge)
+![License](https://img.shields.io/badge/License-MIT-gray?style=for-the-badge)
 
-**Pobfus** is a portable, single-file obfuscation engine designed to transform readable Lua source into a **Fat Hex-Table Brick Wall**. Using the **CamBuscate 0.1.1** core, it maps bytecode to localized variable constants, making static analysis a nightmare for decompilers.
+> [!IMPORTANT]
+> **DEVELOPMENT START:** March 4, 2026  
+> **OFFICIAL RELEASE:** March 5, 2026 (v1.0 Stable)  
+> **AUTHOR:** tenringsofdoom1x
 
----
-
-## 🚀 "Hell-Mode" Features
-* **The Fat Header:** Maps 40+ global functions (`Eb`, `ob`, `La`, etc.) to hide internal Lua calls.
-* **Junk-Bit Injection:** Every byte is wrapped in random alphanumeric "noise" that is stripped at runtime by the internal VM.
-* **Integrity Anchor:** The decryption key is mathematically tied to the ASCII logo length. Edit the logo = break the script.
-* **Encrypted Roast Trap:** Logic-locked insults are buried within the hex-table, triggered only during tamper attempts.
+**Pobfus** is a 24-hour sprint project designed to kill the "API-Dependency" era. It transforms readable Lua into a **Fat Hex-Table Brick Wall** using the **CamBuscate 0.1.1** core. No APIs, no keys, just pure client-side virtualization.
 
 ---
 
-## 🧱 The "Pobfus-Type" Logic
-To build a Pobfus-Type engine, the logic follows a specific three-stage transformation:
+## 🏗️ Build Your Own "Pobfus-Type" Engine
+Pobfus isn't just a tool; it's a **Framework**. You can modify the Monolith to create your own branded protector in minutes.
 
-### 1. Bitwise XOR Mapping
-Every character $c$ in the source is processed through a XOR gate using a dynamic key $k$:
-$$c_{enc} = c \oplus k$$
+### 1. Customizing the "Fat" Header
+Open `index.html` and locate the `Eb, ob, La...` variable string. Replace these with your own localized constants (e.g., `_v1, _v2, _v3`) to change the visual "weight" of the output.
 
-### 2. Chunky Hex Conversion
-The resulting byte is converted to Hex and appended with random junk.
-* **Original:** `p`
-* **Pobfus Output:** `0x70abc` (Where `70` is the hex and `abc` is the junk noise)
+### 2. Injecting Custom "Hell-Mode" Roasts
+Locate the `_roasts` array. Any text added here is automatically bit-XORed. If a skid tampers with your code, the VM will decrypt and print your custom roast before freezing the thread.
 
-### 3. Control-Flow Flattening
-Instead of a linear execution, the Lua VM uses a `repeat...until` state machine. This prevents step-through debugging by hiding the execution order inside a "Dispatcher."
+### 3. Adjusting Junk-Bit Entropy
+Find the `Math.random().toString(36)` logic. Changing the substring length (e.g., `(2, 8)` instead of `(2, 5)`) makes the "Brick Wall" wider and more chaotic.
 
 
 
 ---
 
-## 🛠️ Deployment (Zero-Cost Hosting)
-Because this is a **Monolith Build**, you don't need APIs or Servers:
+## 📊 Feature Comparison (v1.0 Release)
 
-1.  **Fork** this repository.
-2.  **Upload** your `index.html`.
-3.  **Enable GitHub Pages** (Settings > Pages > Main Branch).
-4.  Your obfuscator is live at `https://yourname.github.io/Pobfus`.
+| Feature | Standard APIs | Old-Gen Obf | **Pobfus v1.0** |
+| :--- | :---: | :---: | :---: |
+| **Hosting Cost** | $$$ / Monthly | $ / Server | **$0 (GitHub Pages)** |
+| **Ease of Use** | Hard (API Keys) | Medium | **Easy (Single File)** |
+| **Logic Hiding** | String Encryption | Variable Renaming | **VM Virtualization** |
+| **Tamper Protection** | Error Logs | Print Warning | **Encrypted Roast + Crash** |
+| **Visual "Weight"** | Clean/Small | Readable | **Fat Brick Wall (Intimidating)** |
 
 ---
 
-## 📝 v1.1 Roadmap (Maintenance Tasks)
-- [ ] **JobId/PlaceId Locking:** Restrict script execution to specific game servers.
-- [ ] **Discord Webhook Integration:** Notify the developer when a script is tampered with.
-- [ ] **Variable Randomization:** Change the "Fat Names" (`Eb`, `ob`, etc.) on every click.
-- [ ] **Recursive Virtualization:** Running the VM inside another VM for maximum weight.
+## 🚀 Pro-Tier Features
+* **The Fat Header:** Maps 40+ global functions to hide internal Lua calls and break static analysis.
+* **Junk-Bit Injection:** Every byte is protected by a random noise buffer, stripped only at the final execution layer.
+* **Logo-Bound Integrity:** The decryption key is mathematically tied to the ASCII logo length. Modification = Corruption.
+* **Silent Roast Trap:** Encrypted insults triggered only during unauthorized tamper attempts.
+
+---
+
+## 🧱 The Logic (Pobfus-Type)
+1. **Bitwise XOR Mapping:** $c_{enc} = c \oplus k$
+2. **Chunky Hex Conversion:** Bytes are converted to Hex and padded with noise.
+3. **Control-Flow Flattening:** The VM uses a `repeat...until` state machine (Dispatcher) to hide the execution order.
+
+
+
+---
+
+## 🛠️ Deployment (Single-File Hosting)
+1. **Fork** this repository.
+2. **Upload** your customized `index.html`.
+3. **Enable GitHub Pages** (Settings > Pages > Main Branch).
+4. Your custom obfuscator is live at `https://yourname.github.io/Pobfus`.
 
 ---
 
 ## ⚠️ Disclaimer
-Developed by **tenringsofdoom1x**. This tool is for educational purposes regarding code protection. We do not condone the malicious use of this software. If the code looks like ȟ̸̨̯̲̝̳͓͎̭͖͊̄̔̽̓̂̋̇̋̀̕̚͜ẹ̷͓̺̰̽̍͛̉̐̔͋̓̚͜l̷̢̨̨̫̼͙̞͉̗͉̖̲̖̞̿̉, it's working as intended.
+This tool is for educational purposes regarding code protection and virtualization. Developed by **tenringsofdoom1x**. If the code looks like ȟ̸̨̯̲̝̳͓͎̭͖͊̄̔̽̓̂̋̇̋̀̕̚͜ẹ̷͓̺̰̽̍͛̉̐̔͋̓̚͜l̷̢̨̨̫̼͙̞͉̗͉̖̲̖̞̿̉, it's working as intended.
