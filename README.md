@@ -3,14 +3,14 @@
 
 ![Pobfus Web Interface](webpic.png)
 
-Developed by **[tenringsofdoom1x](https://github.com/tenringsofdoom1x)**, Pobfus 0.8 is a security-focused obfuscator designed to combat AI-driven de-compilation and manual script analysis.
+Developed by **[tenringsofdoom1x](https://github.com/tenringsofdoom1x)**, Pobfus 0.9 is a security-focused obfuscator designed to combat AI-driven de-compilation and manual script analysis.
 
 ---
 
 ## 💎 Proprietary Technology: CamBuscate 0.1.1
 Unlike standard obfuscators, Pobfus utilizes the **CamBuscate Engine**, which transforms your code into a virtualized bytecode state.
 
-* **Environmental Keying:** Decryption keys are derived from the file's own metadata (`debug.getinfo`), preventing static analysis.
+* **Environmental Keying:** Decryption keys are derived from the file's own metadata (`debug.getinfo`), preventing static analysis. With Current Beta Testing on Maintenance, We are Trying to improve it to look like a Perfect Obfuscation Tool (POT) 
 * **Shedletsky Anti-Tamper:** Any modification to the script's header or logic triggers an immediate execution block and crash loop.
 * **Non-Linear Control Flow:** Logic is shattered across a state machine, making it unreadable to LLMs like Grok or ChatGPT.
 
