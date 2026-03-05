@@ -90,25 +90,67 @@
         document.getElementById('logoDisplay').innerText = ASCII_LOGO;
 
         function pobfusStart() {
-            const input = document.getElementById('inputCode').value;
-            if (!input) return alert("Input required!");
+    const input = document.getElementById('inputCode').value;
+    if (!input) return alert("Input required!");
 
-            // XOR VM Logic
-            const key = Math.floor(Math.random() * 255);
-            const bytes = input.split('').map(c => c.charCodeAt(0) ^ key);
+    // 1. Key Generation & Bytecode Scrambling
+    const key = Math.floor(Math.random() * 255) + 1;
+    const bytes = input.split('').map(c => c.charCodeAt(0) ^ key);
+    
+    // 2. Junk Logic Generator (Makes it look complex)
+    const junk = () => {
+        const lines = [
+            `local _0x${Math.random().toString(36).substring(7)} = (66 * 2) / 4`,
+            `if (not _G) then return end`,
+            `local _0xEnv = getfenv and getfenv() or _G`,
+            `for i=1,10 do end`
+        ];
+        return lines[Math.floor(Math.random() * lines.length)];
+    };
 
-            const vm = `--[[
+    // 3. The "Heavy" VM Wrapper
+    const vm = `--[[
 ${ASCII_LOGO}
-    [ VERSION: 0.7 BETA ]
+    [ VERSION: 0.7 I-VIRTUobfuscator ]
 --]]
-local _d = {${bytes.join(',')}}
-local _k = ${key}
-local _s = ""
-for i=1, #_d do _s = _s .. string.char(_d[i] ~ _k) end
-local _r = loadstring or load
-_r(_s)()`;
+local _Pobfus_VM = function()
+    local _stack = {${bytes.join(',')}}
+    local _key = ${key}
+    local _output = ""
+    ${junk()}
+    
+    -- Virtualized Execution Loop
+    local _exec = function(data, k)
+        local res = ""
+        for i=1, #data do
+            ${junk()}
+            local char = data[i]
+            res = res .. string.char(char ~ k)
+            if i % 5 == 0 then ${junk()} end
+        end
+        return res
+    end
 
-            document.getElementById('outputCode').value = vm;
+    local _runtime = _exec(_stack, _key)
+    ${junk()}
+    local _caller = loadstring or load
+    local _fn, _err = _caller(_runtime)
+    
+    if not _fn then 
+        warn("[POBFUS] Execution Error: " .. tostring(_err))
+        return 
+    end
+    
+    return _fn()
+end
+
+-- Anti-Dump Execution
+${junk()}
+pcall(_Pobfus_VM)
+`;
+
+    document.getElementById('outputCode').value = vm;
+}
         }
     </script>
 </body>
