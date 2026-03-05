@@ -84,3 +84,22 @@ button {
 
 .btn-secondary { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; }
 .btn-secondary:hover { background: #30363d; }
+.remarks-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: var(--color-btn-bg);
+    border: 1px solid var(--color-border-default);
+    color: var(--color-fg-default);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    z-index: 1000;
+}
+.remarks-btn:hover {
+    background: var(--color-btn-hover-bg);
+}
