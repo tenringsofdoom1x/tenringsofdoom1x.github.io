@@ -1,13 +1,14 @@
-# 🛡️ Pobfus v0.8 Beta
+# 🛡️ Pobfus v0.9 Beta
 ### *Next-Generation Lua Virtualization & Protection*
 
 ![Pobfus Web Interface](webpic.png)
 
 Developed by **[tenringsofdoom1x](https://github.com/tenringsofdoom1x)**, Pobfus 0.8 is a security-focused obfuscator designed to combat AI-driven de-compilation and manual script analysis.
-
+Status:
+[![Status](https://img.shields.io/badge/Status-Maintenance-yellow)](https://github.com/tenringsofdoom1x)
 ---
 
-## 💎 Proprietary Technology: CamBuscate 0.1
+## 💎 Proprietary Technology: CamBuscate 0.1.1
 Unlike standard obfuscators, Pobfus utilizes the **CamBuscate Engine**, which transforms your code into a virtualized bytecode state.
 
 * **Environmental Keying:** Decryption keys are derived from the file's own metadata (`debug.getinfo`), preventing static analysis.
