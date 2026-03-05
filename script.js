@@ -1,40 +1,58 @@
-/* POBFUS 0.7 - FULL CORE 
-   Place this in your script.js 
-*/
+// --- script.js ---
 
-const POBFUS_LOGO = String.raw`
- /$$$$$$$           /$$        /$$$$$$                    
-| $$__  $$         | $$       /$$__  $$                   
-| $$  \ $$ /$$$$$$ | $$$$$$$ | $$  \__//$$   /$$  /$$$$$$$
-| $$$$$$$//$$__  $$| $$__  $$| $$$$   | $$  | $$ /$$_____/
-| $$____/| $$  \ $$| $$  \ $$| $$_/   | $$  | $$|  $$$$$$ 
-| $$     | $$  | $$| $$  | $$| $$     | $$  | $$ \____  $$
-| $$     |  $$$$$$/| $$$$$$$/| $$     |  $$$$$$/ /$$$$$$$/
-|__/      \______/ |_______/ |__/      \______/ |_______/ 
-`;
-
-function generateJunk() {
-    const segments = [
-        "if _G.PobfusManaged == nil then _G.PobfusManaged = true end",
-        "local _0xTemp = debug and debug.info or getfenv",
-        "if (5 + 2 == 10) then while true do end end",
-        "local _env = getfenv and getfenv() or _G",
-        "for i=1, math.random(2, 5) do local x = i * 2 end"
-    ];
-    return segments[Math.floor(Math.random() * segments.length)];
-}
+// 1. Better Randomization Engine
+const randomHex = (l) => "_0x" + Math.floor(Math.random() * 0xFFFFFF).toString(16).padEnd(l, '0');
 
 function pobfusStart() {
     const input = document.getElementById('inputCode').value;
-    if (!input) return alert("Please input your Lua script!");
+    if (!input) return alert("Input required!");
 
-    // 1. Convert Lua String to Encrypted Bytecode Table
-    const key = Math.floor(Math.random() * 255) + 1;
-    const bytes = input.split('').map(char => char.charCodeAt(0) ^ key);
+    // 2. Control Flow Flattening (State Machine)
+    // We create random 'states' so the code doesn't run top-to-bottom.
+    const states = [10, 25, 42, 67, 88].sort(() => Math.random() - 0.5);
+    const v_state = randomHex(4);
+    const v_vm = randomHex(6);
+    
+    // 3. Dynamic Keying (Logo-Linked)
+    const logoSig = ASCII_LOGO.length % 255;
+    const baseKey = Math.floor(Math.random() * 150) + 50;
+    const finalKey = baseKey ^ logoSig;
+    const bytes = input.split('').map(c => c.charCodeAt(0) ^ finalKey);
 
-    // 2. Build the VM (The Interpreter)
-    // We use getfenv to hide the execution environment
-    const output = `--[[
+    // 4. The Flattened VM Template
+    const vm = `--[[
+${ASCII_LOGO}
+    [ VERSION: 0.7 FLATTENED ]
+--]]
+local ${v_vm} = function()
+    local _data = {${bytes.join(',')}}
+    local _k = ${baseKey} ~ (#debug.getinfo(1).source % 255)
+    local _res = ""
+    local ${v_state} = ${states[0]} 
+
+    -- Control Flow Flattening Dispatcher
+    while ${v_state} ~= 0 do
+        if ${v_state} == ${states[0]} then
+            for i=1, #_data do _res = _res .. string.char(_data[i] ~ _k) end
+            ${v_state} = ${states[1]}
+        elseif ${v_state} == ${states[1]} then
+            local _f = loadstring or load
+            local _s, _err = pcall(_f(_res))
+            if not _s then error("!! TAMPER !!") end
+            ${v_state} = 0 -- Exit State
+        else
+            -- Junk State (Confusion for De-obfuscators)
+            local _junk = math.pi * math.random()
+            ${v_state} = 0 
+        end
+    end
+end
+
+pcall(${v_vm})
+`;
+
+    document.getElementById('outputCode').value = vm;
+              }    const output = `--[[
 ${POBFUS_LOGO}
     [ VERSION: 0.7 BETA ]
     [ PROTECTION: VM + X-TABLE ]
