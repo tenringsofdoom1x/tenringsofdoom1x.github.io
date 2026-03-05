@@ -3,269 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>tenringsofdoom1x / Pobfus-0.8</title>
+    <title>tenringsofdoom1x / Pobfus-1.0</title>
     <style>
-        /* GitHub Dark Theme Palette */
         :root {
-            --color-canvas-default: #0d1117;
-            --color-canvas-subtle: #161b22;
-            --color-border-default: #30363d;
-            --color-fg-default: #c9d1d9;
-            --color-fg-muted: #8b949e;
-            --color-accent-fg: #58a6ff;
-            --color-btn-bg: #21262d;
-            --color-btn-hover-bg: #30363d;
-            --color-btn-primary-bg: #238636;
-            --color-btn-primary-hover-bg: #2ea043;
+            --bg: #0d1117; --subtle: #161b22; --border: #30363d;
+            --text: #c9d1d9; --accent: #58a6ff; --green: #238636;
         }
-
-        body {
-            background-color: var(--color-canvas-default);
-            color: var(--color-fg-default);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        /* Top Header Navigation Mockup */
-        .header {
-            width: 100%;
-            background-color: var(--color-canvas-subtle);
-            padding: 16px;
-            border-bottom: 1px solid var(--color-border-default);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        .container {
-            width: 90%;
-            max-width: 900px;
-            margin-top: 40px;
-            border: 1px solid var(--color-border-default);
-            border-radius: 6px;
-            background-color: var(--color-canvas-subtle);
-            overflow: hidden;
-        }
-
-        .repo-header {
-            padding: 16px;
-            background-color: var(--color-canvas-default);
-            border-bottom: 1px solid var(--color-border-default);
-        }
-
-        .logo-box {
-            font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace;
-            font-size: 8px;
-            line-height: 1.2;
-            color: var(--color-accent-fg);
-            white-space: pre;
-            padding: 20px;
-            background: #010409;
-            text-align: center;
-            overflow-x: auto;
-        }
-
-        .editor-section {
-            padding: 16px;
-        }
-
-        textarea {
-            width: 100%;
-            height: 220px;
-            background-color: #010409;
-            color: #7ee787;
-            border: 1px solid var(--color-border-default);
-            border-radius: 6px;
-            padding: 12px;
-            font-family: ui-monospace, SFMono-Regular, monospace;
-            font-size: 13px;
-            resize: vertical;
-            outline: none;
-            box-sizing: border-box;
-            user-select: text;
-        }
-
-        textarea:focus {
-            border-color: var(--color-accent-fg);
-            box-shadow: 0 0 0 3px rgba(31, 111, 235, 0.3);
-        }
-
-        /* GitHub Style Buttons */
-        .btn {
-            display: inline-block;
-            padding: 5px 16px;
-            font-size: 14px;
-            font-weight: 500;
-            line-height: 20px;
-            cursor: pointer;
-            border: 1px solid rgba(240,246,252,0.1);
-            border-radius: 6px;
-            transition: .2s cubic-bezier(0.3, 0, 0.5, 1);
-            color: var(--color-fg-default);
-            background-color: var(--color-btn-bg);
-            text-align: center;
-        }
-
-        .btn:hover {
-            background-color: var(--color-btn-hover-bg);
-            border-color: #8b949e;
-        }
-
-        .btn-primary {
-            color: #fff;
-            background-color: var(--color-btn-primary-bg);
-        }
-
-        .btn-primary:hover {
-            background-color: var(--color-btn-primary-hover-bg);
-        }
-
-        .controls {
-            display: flex;
-            gap: 8px;
-            margin-top: 10px;
-            flex-wrap: wrap;
-        }
-
-        footer {
-            margin-top: 40px;
-            padding: 20px;
-            color: var(--color-fg-muted);
-            font-size: 12px;
-            text-align: center;
-        }
-
-        .branch-label {
-            background-color: #1f6feb26;
-            color: var(--color-accent-fg);
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 12px;
-            margin-left: 8px;
-        }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; }
+        .header { width: 100%; background: var(--subtle); padding: 15px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 15px; box-sizing: border-box; }
+        .status { background: rgba(56, 139, 253, 0.1); color: var(--accent); border: 1px solid var(--accent); padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+        .container { width: 90%; max-width: 900px; margin: 30px; border: 1px solid var(--border); border-radius: 6px; background: var(--subtle); overflow: hidden; }
+        .logo-box { padding: 20px; background: #010409; font-family: monospace; font-size: 8px; color: var(--accent); white-space: pre; text-align: center; border-bottom: 1px solid var(--border); }
+        textarea { width: 100%; height: 200px; background: #010409; color: #7ee787; border: 1px solid var(--border); padding: 10px; font-family: monospace; font-size: 12px; box-sizing: border-box; resize: vertical; outline: none; }
+        .controls { padding: 15px; display: flex; gap: 10px; }
+        .btn { padding: 8px 18px; border-radius: 6px; cursor: pointer; border: 1px solid var(--border); background: #21262d; color: white; font-weight: 600; }
+        .btn-primary { background: var(--green); border: none; }
+        #toast { position: fixed; top: 20px; right: 20px; background: #21262d; border: 1px solid #f85149; color: #f85149; padding: 12px; display: none; border-radius: 6px; z-index: 999; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <svg height="32" viewBox="0 0 16 16" width="32" style="fill:white;"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path></svg>
-        <span>tenringsofdoom1x / Pobfus-0.8</span>
-        <span class="branch-label">beta</span>
-    </div>
+<div id="toast"></div>
 
-    <div class="container">
-        <div class="repo-header">
-            <div class="logo-box" id="logoDisplay"></div>
+<div class="header">
+    <span style="font-weight: 600;">tenringsofdoom1x / Pobfus-1.0</span>
+    <span class="status">v1.0 STABLE</span>
+</div>
+
+<div class="container">
+    <div class="logo-box" id="logo"></div>
+    <div style="padding: 20px;">
+        <textarea id="input" placeholder="-- Paste Lua Source Here"></textarea>
+        <div class="controls">
+            <button class="btn btn-primary" onclick="runObfuscation()">Protect Script</button>
+            <button class="btn" onclick="copy()">Copy Result</button>
         </div>
-        
-        <div class="editor-section">
-            <label style="color: var(--color-fg-muted); font-size: 12px;">MAIN SOURCE</label>
-            <textarea id="inputCode" placeholder="-- Input Lua code to virtualize..."></textarea>
-            
-            <div class="controls">
-                <button class="btn btn-primary" onclick="pobfusStart()">Protect Code</button>
-                <button class="btn" onclick="copyToClipboard()">Copy</button>
-                <button class="btn" onclick="downloadFile()">Download</button>
-            </div>
-
-            <label style="color: var(--color-fg-muted); font-size: 12px; margin-top: 20px; display: block;">VIRTUALIZED OUTPUT</label>
-            <textarea id="outputCode" readonly placeholder="-- Protected code will appear here..."></textarea>
-        </div>
+        <textarea id="output" readonly placeholder="The 'Fat Wall' will appear here..."></textarea>
     </div>
+</div>
 
-    <footer>
-        &copy; 2026 tenringsofdoom1x. Powered by CamBuscate Virtualization Technology.
-    </footer>
-
-    <script>
-        const ASCII_LOGO = String.raw`
-ooooooooo.              .o8        .o88o.                      
-` + "`" + `888   ` + "`" + `Y88.           "888        888 ` + "`" + `"                      
+<script>
+    // 1. THE SYNCED SOURCE
+    const LOGO = `ooooooooo.              .o8        .o88o.                      
+\`888   \`Y88.           "888        888 \`"                      
  888   .d88'  .ooooo.   888oooo.  o888oo  oooo  oooo   .oooo.o 
- 888ooo88P'  d88' ` + "`" + `88b  d88' ` + "`" + `88b  888    ` + "`" + `888  ` + "`" + `888  d88(  "8 
- 888         888   888  888   888  888     888   888  ` + "`" + `"Y88b.  
+ 888ooo88P'  d88' \`88b  d88' \`88b  888    \`888  \`888  d88(  "8 
+ 888         888   888  888   888  888     888   888  \`"Y88b.  
  888         888   888  888   888  888     888   888  o.  )88b 
-o888o        ` + "`" + `Y8bod8P'  ` + "`" + `Y8bod8P' o888o    ` + "`" + `V88V"V8P' 8""888P'`;
+o888o        \`Y8bod8P'  \`Y8bod8P' o888o    \`V88V"V8P' 8""888P'
+          [ POBFUS 1.0 | CAMBUSCATE 0.1.1 ]`;
 
-        const VERSION_TAG = "\n          [ ENGINE: CAMBUSCATE 0.1 | V0.8 BETA ]";
-        document.getElementById('logoDisplay').innerText = ASCII_LOGO + VERSION_TAG;
+    document.getElementById('logo').innerText = LOGO;
 
-        function generateId(length) {
-            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#';
-            let result = '';
-            for (let i = 0; i < length; i++) {
-                result += chars.charAt(Math.floor(Math.random() * chars.length));
-            }
-            return result;
+    function notify(m) {
+        const t = document.getElementById('toast');
+        t.innerText = "⚠️ " + m; t.style.display = 'block';
+        setTimeout(() => t.style.display = 'none', 3000);
+    }
+
+    // 2. THE INTERNAL ENGINE
+    async function runObfuscation() {
+        const code = document.getElementById('input').value;
+        if (!code) return notify("No Input Detected.");
+
+        const sig = LOGO.length % 255;
+        const seed = 0x6C;
+        const key = seed ^ sig;
+
+        // Encrypting Input into the "Fat" Table
+        const bytes = code.split('').map(c => {
+            const h = (c.charCodeAt(0) ^ key).toString(16).toUpperCase().padStart(2, '0');
+            return "0x" + h + Math.random().toString(36).substring(2, 5);
+        });
+
+        // Encrypting a Roast
+        const roast = "Nice try skid, tenringsofdoom1x owns you.".split('').map(c => 
+            "0x" + (c.charCodeAt(0) ^ key).toString(16).toUpperCase().padStart(2, '0')
+        ).join(',');
+
+        let wall = "";
+        for (let i = 0; i < bytes.length; i++) {
+            wall += bytes[i] + (i === bytes.length - 1 ? "" : ", ");
+            if ((i + 1) % 8 === 0) wall += "\n    ";
         }
 
-        function pobfusStart() {
-            const input = document.getElementById('inputCode').value;
-            if (!input) return;
-
-            const logoSig = (ASCII_LOGO + VERSION_TAG).length % 255;
-            const seed = 0x4B; 
-            const finalKey = seed ^ logoSig;
-
-            const bytes = input.split('').map(c => c.charCodeAt(0) ^ finalKey);
-            const vmName = "_0x" + Math.random().toString(36).substring(7);
-
-            const vm = `--[[
-${ASCII_LOGO}
-${VERSION_TAG}
+        // 3. GENERATING THE OUTPUT (With your Fat Header names)
+        const result = `--[[
+${LOGO}
 ]]
-local ${vmName} = function()
-    local _d = {${bytes.join(',')}}
-    local _s = #debug.getinfo(1).source % 255
-    local _k = ${seed} ~ _s
-    local _r = ""
-    for i=1, #_d do _r = _r .. string.char(_d[i] ~ _k) end
-    local _f = loadstring or load
-    local _ok, _res = pcall(_f(_r))
-    if not _ok then warn("POBFUS: Integrity Fail") while true do end end
+local Eb,ob,La,e_,Za,bb=type,bit32.bxor,getmetatable,pairs,nil,nil
+local G,lb,Yb,L,Zc,gc,Dc,K,Nc,x,Xa,ea,h,zc,Pc,Hc,O,Ka,E,F,_c,ec,ab,Bc,Ub,Ua,qb,sa,fb,Sa,nc,ca,rb,nb,jb,fa_,vc,Ya,zb,a_
+
+gc,Sa,L = (string.char),(string.byte),(bit32.bxor);
+local _D = {
+    ${wall}
+}
+local _T = {${roast}}
+
+local _VM = function(_o, _k)
+    local _r, _s = "", 100
+    repeat
+        if _s == 100 then
+            for _, _v in pairs(_o) do
+                local _hex = tostring(_v):sub(1,4)
+                _r = _r .. gc(L(tonumber(_hex, 16), _k))
+            end
+            _s = 0
+        end
+    until _s == 0
+    return _r
 end
-pcall(${vmName})`;
 
-            document.getElementById('outputCode').value = vm;
-        }
+local _R = function()
+    local _k = ${seed} ~ (#debug.getinfo(1).source % 255)
+    local _ok, _res = pcall(function() return (loadstring or load)(_VM(_D, _k)) end)
+    if _ok and _res then pcall(_res) else print(_VM(_T, _k)) while true do end end
+end
+_R()`;
 
-        function copyToClipboard() {
-            const el = document.getElementById('outputCode');
-            navigator.clipboard.writeText(el.value);
-            alert("Copied to clipboard.");
-        }
+        document.getElementById('output').value = result;
+    }
 
-        function downloadFile() {
-            const val = document.getElementById('outputCode').value;
-            if(!val) return;
-            const uniqueId = generateId(16);
-            const blob = new Blob([val], {type: 'text/plain'});
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = `pobfus-${uniqueId}.lua`;
-            a.click();
-        }
+    function copy() {
+        const o = document.getElementById('output');
+        o.select(); document.execCommand('copy');
+        alert("Fat Build Copied!");
+    }
+</script>
 
-        document.addEventListener('contextmenu', e => e.preventDefault());
-
-<button class="remarks-btn" onclick="window.open('https://github.com/tenringsofdoom1x/repo/issues', '_blank')">
-    <span>💬</span> Remarks
-</button>
-        
-<footer>
-    <p>Pobfus 0.8 Beta | Developed by <a href="https://github.com/tenringsofdoom1x">tenringsofdoom1x</a></p>
-    <p style="font-size: 0.7em; max-width: 600px; margin: 0 auto; opacity: 0.6;">
-        Disclaimer: We do not condone the use of exploiting in our Terms of Service. If your script is compromised, do not ping the developer; leave a report in the remarks.
-    </p>
-</footer>
-        
-    </script>
 </body>
 </html>
