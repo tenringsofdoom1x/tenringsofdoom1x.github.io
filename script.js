@@ -1,109 +1,76 @@
-/**
- * Pobfus 0.8 Beta - CamBuscate Engine
- * Lead Developer: tenringsofdoom1x
- */
+async function pobfusStart() {
+    const _in = document.getElementById('inputCode').value;
+    const _btn = document.getElementById('protectBtn');
+    
+    if (!_in) return _0xErr("Buffer Empty.");
 
-const ASCII_LOGO = String.raw`
-ooooooooo.              .o8        .o88o.                      
-` + "`" + `888   ` + "`" + `Y88.           "888        888 ` + "`" + `"                      
- 888   .d88'  .ooooo.   888oooo.  o888oo  oooo  oooo   .oooo.o 
- 888ooo88P'  d88' ` + "`" + `88b  d88' ` + "`" + `88b  888    ` + "`" + `888  ` + "`" + `888  d88(  "8 
- 888         888   888  888   888  888     888   888  ` + "`" + `"Y88b.  
- 888         888   888  888   888  888     888   888  o.  )88b 
-o888o        ` + "`" + `Y8bod8P'  ` + "`" + `Y8bod8P' o888o    ` + "`" + `V88V"V8P' 8""888P'`;
+    _btn.disabled = true;
+    _btn.innerText = "🏗️ Constructing Hell...";
 
-const VERSION_TAG = "\n          [ ENGINE: CAMBUSCATE 0.1 | V0.8 BETA ]";
+    await new Promise(r => setTimeout(r, 800));
 
-// Initialization
-document.addEventListener('DOMContentLoaded', () => {
-    const logoDisplay = document.getElementById('logoDisplay');
-    if (logoDisplay) {
-        logoDisplay.innerText = ASCII_LOGO + VERSION_TAG;
-    }
-    // Anti-Inspect Protection
-    document.addEventListener('contextmenu', e => e.preventDefault());
-});
+    try {
+        const _sig = SYNC_HEADER.length % 255;
+        const _seed = 0x6C; 
+        const _key = _seed ^ _sig;
 
-/**
- * Generates a unique, high-entropy ID for filenames
- */
-function generateId(length) {
-    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!#@';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return result;
-}
+        // The "Brick Wall" string
+        const _wall = _in.split('').map(c => {
+            const h = (c.charCodeAt(0) ^ _key).toString(16).padStart(2, '0');
+            const j = Math.random().toString(36).substring(2, 6); 
+            return h + j;
+        }).join('').toUpperCase();
 
-/**
- * Main Obfuscation Engine
- */
-function pobfusStart() {
-    const input = document.getElementById('inputCode').value;
-    if (!input) {
-        alert("System Error: No source code detected in buffer.");
-        return;
-    }
+        // New: "Nice Try" Watermark injection
+        const watermark = "--- NICE TRY SKID | PROTECTED BY TENRINGSOFDOOM1X ---";
+        const v_data = "_0x" + Math.random().toString(36).substring(7);
+        const v_vm = "_0x" + Math.random().toString(36).substring(7);
+        
+        // Randomly picked roasts
+        const roasts = [
+            "Nice try, stay mad.",
+            "tenringsofdoom1x owns you.",
+            "Grok failed, you will too.",
+            "Is your Ctrl+C broken yet?",
+            "Imagine thinking this is readable."
+        ];
+        const r1 = roasts[Math.floor(Math.random() * roasts.length)];
 
-    // CamBuscate 0.1 Integrity Logic
-    // This links the decryption key to the exact byte length of the logo
-    const logoSig = (ASCII_LOGO + VERSION_TAG).length % 255;
-    const internalSeed = 0x4B; 
-    const finalKey = internalSeed ^ logoSig;
-
-    // XOR Virtualization
-    const bytes = input.split('').map(c => c.charCodeAt(0) ^ finalKey);
-    const vmName = "_0x" + Math.random().toString(36).substring(7);
-
-    const outputVM = `--[[
-${ASCII_LOGO}
-${VERSION_TAG}
+        const _out = `--[[
+${SYNC_HEADER}
 ]]
-local ${vmName} = function()
-    local _data = {${bytes.join(',')}}
-    local _sig = #debug.getinfo(1).source % 255
-    local _k = ${internalSeed} ~ _sig
-    local _res = ""
-    for i=1, #_data do _res = _res .. string.char(_data[i] ~ _k) end
+-- ${watermark}
+local _0xNICETRY = "${watermark}"
+local ${v_data} = "${_wall}"
+
+local ${v_vm} = function()
+    local _s = #debug.getinfo(1).source % 255
+    local _k = ${_seed} ~ _s
+    -- Integrity verification of the 'Nice Try' anchor
+    if _0xNICETRY ~= "${watermark}" or not _0xNICETRY:find("TENRINGSOFDOOM1X") then
+        while true do end
+    end
+    local _r = ""
+    for i = 1, #${v_data}, 6 do
+        local _b = tonumber(${v_data}:sub(i, i+1), 16)
+        if _b then _r = _r .. string.char(_b ~ _k) end
+    end
     local _f = loadstring or load
-    local _ok, _exec = pcall(_f(_res))
+    local _ok, _e = pcall(_f(_r))
     if not _ok then 
-        warn("POBFUS V0.8: TAMPER DETECTED") 
+        print("${r1}")
+        warn("POBFUS: FATAL_TAMPER_DETECTED") 
         while true do end 
     end
 end
-pcall(${vmName})`;
 
-    document.getElementById('outputCode').value = outputVM;
-    console.log(`[POBFUS] Build successful. Entropy Key: ${finalKey}`);
+pcall(${v_vm})`;
+
+        document.getElementById('outputCode').value = _out;
+        _btn.innerText = "Deploy CamBuscate 0.1.1";
+    } catch (err) {
+        _0xErr("Engine Fault.");
+    } finally {
+        _btn.disabled = false;
+    }
 }
-
-/**
- * Clipboard & File Handling
- */
-function copyToClipboard() {
-    const el = document.getElementById('outputCode');
-    if (!el.value) return;
-    
-    navigator.clipboard.writeText(el.value).then(() => {
-        // Optional: Trigger a GitHub-style tooltip or toast here
-        alert("Successfully copied to clipboard.");
-    });
-}
-
-function downloadFile() {
-    const content = document.getElementById('outputCode').value;
-    if (!content) return;
-
-    const uniqueId = generateId(16);
-    const fileName = `pobfus-${uniqueId}.lua`;
-    
-    const blob = new Blob([content], { type: 'text/plain' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = fileName;
-    link.click();
-    
-    console.log(`[FS] File Exported: ${fileName}`);
-        }
