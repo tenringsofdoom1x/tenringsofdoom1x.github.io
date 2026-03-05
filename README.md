@@ -1,32 +1,59 @@
-# 🛡️ Pobfus v0.9 Beta
-### *Next-Generation Lua Virtualization & Protection*
+# 🛡️ Pobfus v1.0 | The Monolith
+### *Advanced Lua Virtualization & Control-Flow Flattening*
 
-![Pobfus Web Interface](webpic.png)
+> [!CAUTION]
+> **STATUS: ⚠️ MAINTENANCE YELLOW**
+> The engine is currently undergoing "Hell-Mode" optimization. Logic stability is 98%. 
+> Current Version: 1.0-RC1 (Release Candidate)
 
-Developed by **[tenringsofdoom1x](https://github.com/tenringsofdoom1x)**, Pobfus 0.9 is a security-focused obfuscator designed to combat AI-driven de-compilation and manual script analysis.
+**Pobfus** is a portable, single-file obfuscation engine designed to transform readable Lua source into a **Fat Hex-Table Brick Wall**. Using the **CamBuscate 0.1.1** core, it maps bytecode to localized variable constants, making static analysis a nightmare for decompilers.
+
+---
+
+## 🚀 "Hell-Mode" Features
+* **The Fat Header:** Maps 40+ global functions (`Eb`, `ob`, `La`, etc.) to hide internal Lua calls.
+* **Junk-Bit Injection:** Every byte is wrapped in random alphanumeric "noise" that is stripped at runtime by the internal VM.
+* **Integrity Anchor:** The decryption key is mathematically tied to the ASCII logo length. Edit the logo = break the script.
+* **Encrypted Roast Trap:** Logic-locked insults are buried within the hex-table, triggered only during tamper attempts.
 
 ---
 
-## 💎 Proprietary Technology: CamBuscate 0.1.1
-Unlike standard obfuscators, Pobfus utilizes the **CamBuscate Engine**, which transforms your code into a virtualized bytecode state.
+## 🧱 The "Pobfus-Type" Logic
+To build a Pobfus-Type engine, the logic follows a specific three-stage transformation:
 
-* **Environmental Keying:** Decryption keys are derived from the file's own metadata (`debug.getinfo`), preventing static analysis. With Current Beta Testing on Maintenance, We are Trying to improve it to look like a Perfect Obfuscation Tool (POT) 
-* **Shedletsky Anti-Tamper:** Any modification to the script's header or logic triggers an immediate execution block and crash loop.
-* **Non-Linear Control Flow:** Logic is shattered across a state machine, making it unreadable to LLMs like Grok or ChatGPT.
+### 1. Bitwise XOR Mapping
+Every character $c$ in the source is processed through a XOR gate using a dynamic key $k$:
+$$c_{enc} = c \oplus k$$
 
-## 🚀 Getting Started
-1. Access the [Live Obfuscator Here](https://tenringsofdoom1x.github.io/).
-2. Paste your raw Lua code into the editor.
-3. Click **Protect Code** to deploy the CamBuscate engine.
-4. Download your unique build (Filename: `pobfus-[RandomID].lua`).
+### 2. Chunky Hex Conversion
+The resulting byte is converted to Hex and appended with random junk.
+* **Original:** `p`
+* **Pobfus Output:** `0x70abc` (Where `70` is the hex and `abc` is the junk noise)
 
-## ⚖️ Terms of Service & Disclaimer
-* **No Exploiting:** We do not condone the use of exploiting. This tool is provided for the protection of intellectual property and educational purposes only.
-* **Support Policy:** If your script gets skidded, **do not** ping me in the thousands. 
-* **Reporting:** If you have issues or feedback, please leave them in the **Remarks** section or via GitHub Issues.
+### 3. Control-Flow Flattening
+Instead of a linear execution, the Lua VM uses a `repeat...until` state machine. This prevents step-through debugging by hiding the execution order inside a "Dispatcher."
 
-Sincerely,  
-**tenringsofdoom1x**
+
 
 ---
-[![Status](https://img.shields.io/badge/Status-Maintenance-yellow)](https://github.com/tenringsofdoom1x)
+
+## 🛠️ Deployment (Zero-Cost Hosting)
+Because this is a **Monolith Build**, you don't need APIs or Servers:
+
+1.  **Fork** this repository.
+2.  **Upload** your `index.html`.
+3.  **Enable GitHub Pages** (Settings > Pages > Main Branch).
+4.  Your obfuscator is live at `https://yourname.github.io/Pobfus`.
+
+---
+
+## 📝 v1.1 Roadmap (Maintenance Tasks)
+- [ ] **JobId/PlaceId Locking:** Restrict script execution to specific game servers.
+- [ ] **Discord Webhook Integration:** Notify the developer when a script is tampered with.
+- [ ] **Variable Randomization:** Change the "Fat Names" (`Eb`, `ob`, etc.) on every click.
+- [ ] **Recursive Virtualization:** Running the VM inside another VM for maximum weight.
+
+---
+
+## ⚠️ Disclaimer
+Developed by **tenringsofdoom1x**. This tool is for educational purposes regarding code protection. We do not condone the malicious use of this software. If the code looks like ȟ̸̨̯̲̝̳͓͎̭͖͊̄̔̽̓̂̋̇̋̀̕̚͜ẹ̷͓̺̰̽̍͛̉̐̔͋̓̚͜l̷̢̨̨̫̼͙̞͉̗͉̖̲̖̞̿̉, it's working as intended.
