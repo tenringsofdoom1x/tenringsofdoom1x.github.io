@@ -3,50 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pobfus-1.0.6 // tenringsofdoom1x</title>
+    <title>Pobfus v1.0.61 // tenringsofdoom1x</title>
     <style>
         :root { --bg: #0d1117; --sub: #161b22; --brd: #30363d; --txt: #c9d1d9; --acc: #58a6ff; --grn: #238636; }
-        body { background: var(--bg); color: var(--txt); font-family: 'Courier New', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
-        .header { width: 100%; background: var(--sub); padding: 10px 20px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
-        .badge { background: rgba(35, 134, 54, 0.1); color: #3fb950; border: 1px solid rgba(63, 185, 80, 0.3); padding: 2px 8px; border-radius: 4px; font-size: 10px; letter-spacing: 1px; }
-        .container { width: 95%; max-width: 900px; margin-top: 30px; border: 1px solid var(--brd); background: var(--sub); border-radius: 4px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-        .logo-box { padding: 15px; background: #010409; font-size: 8px; color: var(--acc); white-space: pre; text-align: center; border-bottom: 1px solid var(--brd); overflow-x: auto; }
-        .editor { padding: 15px; display: flex; flex-direction: column; gap: 10px; }
-        textarea { width: 100%; height: 200px; background: #010409; color: #8b949e; border: 1px solid var(--brd); padding: 10px; font-size: 12px; box-sizing: border-box; resize: none; outline: none; transition: 0.2s; }
+        body { background: var(--bg); color: var(--txt); font-family: 'Segoe UI', sans-serif; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
+        .header { width: 100%; background: var(--sub); padding: 12px 24px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .badge { background: rgba(88, 166, 255, 0.1); color: var(--acc); border: 1px solid rgba(88, 166, 255, 0.3); padding: 3px 12px; border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .container { width: 95%; max-width: 950px; margin: 30px 0; border: 1px solid var(--brd); background: var(--sub); border-radius: 8px; overflow: hidden; box-shadow: 0 15px 50px rgba(0,0,0,0.6); }
+        
+        #logo { 
+            padding: 25px; 
+            background: #010409; 
+            color: var(--acc); 
+            font-family: "Courier New", monospace; 
+            font-size: 9px; 
+            line-height: 1.2; 
+            white-space: pre; 
+            overflow-x: auto; 
+            text-align: center;
+            border-bottom: 1px solid var(--brd);
+            margin: 0;
+        }
+
+        .editor { padding: 20px; display: flex; flex-direction: column; gap: 15px; }
+        textarea { width: 100%; height: 230px; background: #010409; color: #8b949e; border: 1px solid var(--brd); border-radius: 6px; padding: 15px; font-family: 'Consolas', monospace; font-size: 13px; box-sizing: border-box; resize: none; outline: none; }
         textarea:focus { border-color: var(--acc); color: #fff; }
-        .controls { display: flex; gap: 8px; flex-wrap: wrap; }
-        .btn { padding: 8px 16px; border-radius: 3px; cursor: pointer; border: 1px solid var(--brd); background: #21262d; color: #c9d1d9; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        
+        .controls { display: flex; gap: 12px; flex-wrap: wrap; }
+        .btn { padding: 10px 20px; border-radius: 5px; cursor: pointer; border: 1px solid var(--brd); background: #21262d; color: #c9d1d9; font-size: 12px; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
         .btn:hover { background: #30363d; border-color: #8b949e; }
         .btn-prim { background: var(--grn); color: white; border: none; }
-        .btn-prim:disabled { opacity: 0.5; cursor: wait; }
-        #toast { position: fixed; top: 20px; background: var(--acc); color: #000; padding: 5px 15px; border-radius: 2px; display: none; font-weight: bold; z-index: 99; font-size: 12px; }
+        .btn-prim:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        
+        #toast { position: fixed; top: 25px; background: var(--acc); color: #0d1117; padding: 10px 25px; border-radius: 4px; display: none; font-weight: 900; z-index: 1000; font-size: 12px; }
     </style>
 </head>
 <body>
 
-<div id="toast">SYSTEM_ONLINE</div>
+<div id="toast">VERSION_1.0.61_LOADED</div>
 
 <div class="header">
-    <div style="font-weight: bold; font-size: 14px; letter-spacing: 2px;">POBFUS_v1.0.6</div>
-    <div class="badge">STABLE_BUILD</div>
+    <div style="font-weight: 800; font-size: 18px; letter-spacing: 1.5px;">POBFUS <span style="color:var(--acc)">v1.0.61</span></div>
+    <div class="badge">LAG-SYNC ACTIVE</div>
 </div>
 
 <div class="container">
-    <div class="logo-box" id="logo"></div>
+    <pre id="logo"></pre>
     <div class="editor">
-        <textarea id="in" placeholder="-- [ INPUT_BUFFER ] --&#10;Paste source here..."></textarea>
-        
+        <textarea id="in" placeholder="-- [ INPUT_BUFFER ]: Paste Lua code here..."></textarea>
         <div class="controls">
-            <button class="btn btn-prim" id="go" onclick="run()">PROTECT_SOURCE</button>
-            <button class="btn" onclick="test()">LOAD_SAMPLE</button>
-            <button class="btn" onclick="copy()">COPY_HEX</button>
-            <button class="btn" id="dl" style="display:none" onclick="save()">DOWNLOAD_.LUA</button>
+            <button class="btn btn-prim" id="go" onclick="run()">Protect Source</button>
+            <button class="btn" onclick="test()">Load Sample</button>
+            <button class="btn" onclick="copy()">Copy Output</button>
+            <button class="btn" id="dl" style="display:none" onclick="save()">Download .lua</button>
         </div>
-
-        <textarea id="out" readonly placeholder="-- [ OUTPUT_BRICK_WALL ] --&#10;Encrypted payload will appear here..."></textarea>
+        <textarea id="out" readonly placeholder="-- [ OUTPUT_WALL ]: Monolith v1.0.61 encrypted data..."></textarea>
     </div>
 </div>
 
 <script src="script.js"></script>
 </body>
-</html>
+    </html>
