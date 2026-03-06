@@ -2,40 +2,39 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pobfus 1.11.01</title>
+    <title>Pobfus 1.11.01 // Terminal</title>
     <style>
         :root { --bg: #010409; --sub: #0d1117; --brd: #30363d; --txt: #adbac7; --acc: #f69d50; }
-        body { background: var(--bg); color: var(--txt); font-family: 'Consolas', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; overflow-x: hidden; }
+        body { background: var(--bg); color: var(--txt); font-family: 'Consolas', monospace; margin: 0; display: flex; flex-direction: column; align-items: center; min-height: 100vh; }
         .header { width: 100%; background: var(--sub); padding: 15px 30px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
-        .container { width: 95%; max-width: 1100px; margin: 40px 0; border: 1px solid var(--brd); background: var(--sub); border-radius: 6px; box-shadow: 0 0 30px rgba(0,0,0,0.7); }
-        #logo { padding: 30px; background: #000; color: var(--acc); font-size: 11px; line-height: 1.2; white-space: pre; overflow-x: auto; text-align: center; border-bottom: 1px solid var(--brd); }
-        .editor { padding: 25px; display: flex; flex-direction: column; gap: 20px; }
-        textarea { width: 100%; height: 300px; background: #010409; color: #768390; border: 1px solid var(--brd); padding: 15px; font-size: 13px; outline: none; border-radius: 4px; resize: none; transition: 0.2s; }
-        textarea:focus { border-color: var(--acc); color: #adbac7; }
-        .btn-row { display: flex; gap: 12px; }
-        .btn { padding: 14px 30px; cursor: pointer; border: 1px solid var(--brd); background: #21262d; color: var(--txt); font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: 1px; }
+        .container { width: 95%; max-width: 1100px; margin: 40px 0; border: 1px solid var(--brd); background: var(--sub); border-radius: 6px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+        #logo { padding: 30px; background: #000; color: var(--acc); font-size: 10px; line-height: 1.2; white-space: pre; text-align: center; border-bottom: 1px solid var(--brd); margin: 0; }
+        .editor { padding: 25px; display: flex; flex-direction: column; gap: 15px; }
+        textarea { width: 100%; height: 280px; background: #010409; color: #768390; border: 1px solid var(--brd); padding: 15px; font-size: 13px; outline: none; border-radius: 4px; resize: none; font-family: 'Courier New', monospace; }
+        .btn-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+        .btn { padding: 12px 25px; cursor: pointer; border: 1px solid var(--brd); background: #21262d; color: var(--txt); font-size: 11px; font-weight: bold; text-transform: uppercase; border-radius: 4px; transition: 0.2s; }
         .btn-run { background: var(--acc); color: #000; border: none; }
-        #status { font-size: 10px; color: #484f58; font-weight: bold; font-family: 'Courier New', monospace; }
+        .btn:hover { background: #30363d; }
+        #status { font-size: 11px; color: #484f58; font-weight: bold; margin-left: auto; letter-spacing: 1px; }
     </style>
 </head>
 <body>
-<div class="header">
-    <div style="letter-spacing: 4px; font-weight: 900; font-size: 20px;">POBFUS <span style="color:var(--acc)">1.11.01</span></div>
-</div>
-<div class="container">
-    <pre id="logo"></pre>
-    <div class="editor">
-        <textarea id="in" spellcheck="false" placeholder="-- [INPUT_BUFFER]"></textarea>
-        <div id="status">ENGINE_IDLE</div>
-        <div class="btn-row">
-            <button class="btn btn-run" id="go"></button>
-            <button class="btn" id="cp"></button>
-            <button class="btn" id="dl" style="display:none"></button>
-        </div>
-        <textarea id="out" readonly spellcheck="false" placeholder="-- [ENCRYPTED_OUTPUT]"></textarea>
+    <div class="header">
+        <div style="letter-spacing: 3px; font-weight: 900;">POBFUS <span style="color:var(--acc)">1.11.01</span></div>
     </div>
-</div>
-<script src="script.js"></script>
+    <div class="container">
+        <pre id="logo"></pre>
+        <div class="editor">
+            <textarea id="in" placeholder="-- [INPUT_SOURCE]"></textarea>
+            <div class="btn-row">
+                <button class="btn btn-run" id="go">COMPILE_1.11.01</button>
+                <button class="btn" id="cp">COPY_CLIPBOARD</button>
+                <button class="btn" id="dl" style="visibility:hidden">DOWNLOAD_FILE</button>
+                <div id="status">CAMBUSCATE_READY</div>
+            </div>
+            <textarea id="out" readonly placeholder="-- [OBFUSCATED_OUTPUT]"></textarea>
+        </div>
+    </div>
+    <script src="script.js"></script>
 </body>
 </html>
