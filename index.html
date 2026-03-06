@@ -5,56 +5,68 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pobfus // repository</title>
     <style>
-        :root { --bg: #0a0a0a; --panel: #0d0d0d; --brd: #1a1a1a; --txt: #888; --main: #eee; --acc: #ffffff; }
+        :root { --bg: #0a0a0a; --panel: #0d0d0d; --brd: #1a1a1a; --txt: #888; --main: #eee; --acc: #00ff88; --dev: #ffaa00; }
+        
+        * { box-sizing: border-box; }
         body { 
             background: var(--bg); color: var(--main); 
             font-family: "fira code", monospace; margin: 0; 
             display: flex; height: 100vh; text-transform: lowercase;
-            overflow: hidden;
+            overflow: hidden; 
         }
 
-        /* sidebar architecture */
         .sidebar { 
-            width: 280px; background: var(--panel); border-right: 1px solid var(--brd); 
-            padding: 30px; display: flex; flex-direction: column; gap: 15px;
-            z-index: 10;
+            width: 320px; min-width: 320px; background: var(--panel); border-right: 1px solid var(--brd); 
+            padding: 25px; display: flex; flex-direction: column; gap: 15px;
+            height: 100vh;
         }
 
-        .brand-row { display: flex; align-items: center; gap: 12px; opacity: 0.8; margin-bottom: 10px;}
+        .brand-row { display: flex; align-items: center; gap: 12px; opacity: 0.9; margin-bottom: 10px;}
         .logo { width: 22px; height: 22px; fill: var(--main); }
 
-        .title-block { margin-bottom: 15px; }
+        .title-block { margin-bottom: 10px; }
         .title { font-size: 20px; font-weight: 800; color: #fff; letter-spacing: -1px; }
-        .subtitle { font-size: 10px; color: var(--txt); margin-top: 4px; }
+        .subtitle { font-size: 9px; color: var(--txt); letter-spacing: 1px; }
 
-        .license-box { 
-            font-size: 9px; color: #333; line-height: 1.4; 
-            padding: 12px; border: 1px solid var(--brd); border-radius: 4px; margin-bottom: 10px;
+        .changelog-container {
+            margin-top: 10px; flex-grow: 1; overflow-y: auto; padding-right: 5px;
         }
+        .log-section { margin-bottom: 15px; }
+        .log-ver { font-size: 10px; color: var(--acc); font-weight: 700; margin-bottom: 4px; display: block;}
+        .log-ver.dev { color: var(--dev); }
+        .log-item { font-size: 10px; color: #555; display: block; line-height: 1.4; border-left: 1px solid #222; padding-left: 8px; }
 
         .nav-group { display: flex; flex-direction: column; gap: 8px; }
         .btn { 
             background: transparent; border: 1px solid var(--brd); color: var(--txt); 
             padding: 10px; cursor: pointer; font-family: inherit; font-size: 11px; text-align: left;
-            transition: 0.1s;
+            transition: 0.2s; border-radius: 4px;
         }
-        .btn:hover { border-color: var(--main); color: var(--main); background: #111; }
-        .btn-run { background: #fff; color: #000; border: none; font-weight: 700; margin-bottom: 5px;}
-        .btn-run:hover { background: #ccc; }
+        .btn:hover { border-color: var(--main); color: var(--main); background: #151515; }
+        .btn-run { background: #fff; color: #000; border: none; font-weight: 700; }
 
-        /* workspace */
-        .main { flex: 1; display: flex; flex-direction: column; position: relative; }
-        .workspace { display: grid; grid-template-columns: 1fr 1fr; flex: 1; gap: 1px; background: var(--brd); }
+        .creator-link { 
+            margin-top: auto; padding-top: 15px; border-top: 1px solid var(--brd);
+            text-decoration: none; display: flex; align-items: center; gap: 10px;
+        }
+        .creator-at { color: var(--txt); font-size: 10px; }
+        .creator-name { color: #fff; font-size: 11px; font-weight: 700; }
+
+        .main { flex: 1; display: flex; flex-direction: column; height: 100vh; }
+        .workspace { 
+            display: grid; grid-template-columns: 1fr 1fr; flex: 1; 
+            gap: 1px; background: var(--brd);
+        }
+
+        .editor-container { position: relative; height: 100%; background: var(--bg); }
         textarea { 
-            background: var(--bg); border: none; color: var(--main); padding: 25px; 
-            resize: none; outline: none; font-size: 12px; line-height: 1.6;
-            transition: background 0.3s ease;
+            width: 100%; height: 100%; background: transparent; border: none; 
+            color: var(--main); padding: 30px; resize: none; outline: none; 
+            font-size: 13px; line-height: 1.6; font-family: "fira code", monospace;
+            white-space: pre; overflow: auto;
         }
         
-        textarea#in.drag-over { background: #111; outline: 1px dashed var(--txt); }
-
-        #log { position: fixed; bottom: 20px; right: 20px; font-size: 10px; color: #444; pointer-events: none; }
-        input[type="file"] { display: none; }
+        #log { position: fixed; bottom: 20px; right: 20px; font-size: 10px; color: #333; pointer-events: none; }
     </style>
 </head>
 <body>
@@ -67,146 +79,45 @@
 
         <div class="title-block">
             <div class="title">pobfus</div>
-            <div class="subtitle">v1.11.05 godly runtime</div>
-        </div>
-
-        <div class="license-box">
-            mit license<br><br>
-            permission is granted to process logic streams as-is.
+            <div class="subtitle">v1.11.05 repository</div>
         </div>
 
         <div class="nav-group">
             <button class="btn btn-run" id="go">execute process</button>
-            <button class="btn" onclick="document.getElementById('up').click()">upload file</button>
             <button class="btn" id="cp">copy output</button>
-            <button class="btn" id="dl">download .lua</button>
             <button class="btn" id="cl">purge buffer</button>
-            <input type="file" id="up" accept=".lua,.txt">
         </div>
 
-        <div style="margin-top: auto;">
-            <label style="font-size: 10px; color: #444; cursor: pointer; display: flex; align-items: center; gap: 8px;">
-                <input type="checkbox" id="mob"> mobile_optimization
-            </label>
+        <div class="history-title" style="font-size: 10px; color: #444; margin-top: 15px; border-bottom: 1px solid var(--brd); padding-bottom: 5px; text-transform: uppercase;">project logs</div>
+        
+        <div class="changelog-container">
+            <div class="log-section">
+                <span class="log-ver dev">v1.11.06 (scheduled)</span>
+                <span class="log-item">deployment date: march 11 2026</span>
+                <span class="log-item">stable core integration</span>
+            </div>
+            <div class="log-section">
+                <span class="log-ver">v1.11.05 (active)</span>
+                <span class="log-item">full sidebar scroll fix</span>
+                <span class="log-item">branding reconstruction</span>
+                <span class="log-item">automated minification</span>
+            </div>
         </div>
+
+        <a href="https://github.com/tenringsofdoom1x" class="creator-link" target="_blank">
+            <div class="creator-at">@</div>
+            <div class="creator-name">tenringsofdoom1x</div>
+        </a>
     </div>
 
     <div class="main">
         <div class="workspace">
-            <textarea id="in" spellcheck="false" placeholder="-- source_stream (drag file here)"></textarea>
-            <textarea id="out" spellcheck="false" readonly placeholder="-- void_output"></textarea>
+            <div class="editor-container"><textarea id="in" spellcheck="false" placeholder="-- source_input"></textarea></div>
+            <div class="editor-container"><textarea id="out" spellcheck="false" readonly placeholder="-- void_output"></textarea></div>
         </div>
     </div>
 
     <div id="log"></div>
-
-    <script>
-        (function() {
-            const iel = document.getElementById('in'), oel = document.getElementById('out');
-            const log = document.getElementById('log'), mob = document.getElementById('mob');
-            const upInput = document.getElementById('up');
-
-            const push = (t) => { 
-                log.innerText = `> ${t}`; 
-                setTimeout(() => { if(log.innerText === `> ${t}`) log.innerText = ''; }, 4000);
-            };
-
-            // auto-minify engine
-            const minifyLogic = (src) => {
-                return src
-                    .replace(/--\[\[[\s\S]*?\]\]/g, '') 
-                    .replace(/--.*$/gm, '')             
-                    .replace(/\s+/g, ' ')               
-                    .trim();
-            };
-
-            const todec = (s) => s.split('').map(c => "\\" + c.charCodeAt(0)).join('');
-
-            // file handler
-            const handleFile = (file) => {
-                if (!file) return;
-                const ext = file.name.split('.').pop().toLowerCase();
-                if (['lua', 'txt'].indexOf(ext) === -1) return push("err_type_refused");
-                const reader = new FileReader();
-                reader.onload = (f) => { iel.value = f.target.result; push("stream_imported"); };
-                reader.readAsText(file);
-            };
-
-            upInput.onchange = (e) => { handleFile(e.target.files[0]); upInput.value = ''; };
-
-            iel.addEventListener('dragover', (e) => { e.preventDefault(); iel.classList.add('drag-over'); });
-            iel.addEventListener('dragleave', () => { iel.classList.remove('drag-over'); });
-            iel.addEventListener('drop', (e) => {
-                e.preventDefault();
-                iel.classList.remove('drag-over');
-                handleFile(e.dataTransfer.files[0]);
-            });
-
-            // core process
-            document.getElementById('go').onclick = () => {
-                let src = iel.value.trim();
-                if(!src) return push("err_buffer_null");
-
-                push("minifying_stream...");
-                
-                setTimeout(() => {
-                    try {
-                        src = minifyLogic(src);
-                        push("building_void...");
-
-                        const k = Math.floor(Math.random() * 45) + 32;
-                        const d = Array.from(src).map(x => x.charCodeAt(0) ^ k).join(',');
-                        const h = todec("pobfus: logic active");
-
-                        let res = `--[[\n    pobfus // v1.11.05\n    auto-minified godly build\n]]\n\n`;
-                        res += `task.spawn(function() while task.wait(120) do print("${h}") end end);\n\n`;
-                        res += `local _0x_mem = {${d}}; \n`;
-                        res += `local _success, _error = pcall(function() \n`;
-                        
-                        if (mob.checked) {
-                            res += `    local _0x_buf = {}; for _, v in pairs(_0x_mem) do table.insert(_0x_buf, string.char(bit32.bxor(v, ${k}))) end; local _0x_str = table.concat(_0x_buf); \n`;
-                        } else {
-                            res += `    local _0x_str = ""; for _, v in pairs(_0x_mem) do _0x_str = _0x_str .. string.char(bit32.bxor(v, ${k})) end; \n`;
-                        }
-                        
-                        res += `    local _0x_env = setmetatable({}, { \n`;
-                        res += `        __index = function(_, k) \n`;
-                        res += `            if k == "debug" or k == "getfenv" then return function() end end; \n`;
-                        res += `            return (getgenv and getgenv()[k] or _G[k]) \n`;
-                        res += `        end, \n`;
-                        res += `        __metatable = "locked" \n`;
-                        res += `    }); \n`;
-                        
-                        res += `    local _0x_vm = loadstring(_0x_str); \n`;
-                        res += `    setfenv(_0x_vm, _0x_env); \n`;
-                        res += `    (task and task.spawn or spawn)(_0x_vm); \n`;
-                        res += `end); \n`;
-                        
-                        oel.value = res; 
-                        push("build_complete");
-                    } catch (e) { push("build_fault"); }
-                }, 1000);
-            };
-
-            // utility handlers
-            document.getElementById('cp').onclick = () => { 
-                if(!oel.value) return;
-                navigator.clipboard.writeText(oel.value); 
-                push("buffer_copied"); 
-            };
-
-            document.getElementById('dl').onclick = () => {
-                if(!oel.value) return;
-                const blob = new Blob([oel.value], {type: "text/plain"});
-                const a = document.createElement('a');
-                a.href = URL.createObjectURL(blob);
-                a.download = "pobfus_build.lua";
-                a.click();
-                push("file_dispatched");
-            };
-
-            document.getElementById('cl').onclick = () => { iel.value = ""; oel.value = ""; push("buffer_purged"); };
-        })();
-    </script>
+    <script src="script.js"></script>
 </body>
-    </html>
+</html>
