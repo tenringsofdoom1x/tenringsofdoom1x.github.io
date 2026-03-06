@@ -2,90 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pobfus 1.11.01 // Virtualization Studio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pobfus JS // Virtualization Studio</title>
     <style>
-        :root { 
-            --bg: #0f111a; --sidebar: #1a1c25; --panel: #161922; 
-            --brd: #2d313d; --txt: #d4d4d4; --acc: #61afef; 
-            --btn: #3d4451; --btn-hover: #4b5263; --err: #e06c75; --suc: #98c379; 
-        }
-        body { background: var(--bg); color: var(--txt); font-family: 'JetBrains Mono', 'Consolas', monospace; margin: 0; padding: 0; display: flex; justify-content: center; height: 100vh; }
-        .container { width: 100%; max-width: 1100px; display: flex; flex-direction: column; border-right: 1px solid var(--brd); border-left: 1px solid var(--brd); background: var(--sidebar); }
-        
-        /* Header */
-        .header { padding: 12px 20px; background: #090b10; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
-        .logo-text { color: var(--acc); font-weight: bold; font-size: 14px; letter-spacing: 1px; }
-        .version-tag { font-size: 10px; color: #5c6370; background: #282c34; padding: 2px 8px; border-radius: 10px; border: 1px solid var(--brd); }
-
-        /* Action Toolbar */
-        .toolbar { background: var(--panel); padding: 10px 15px; display: flex; gap: 10px; border-bottom: 1px solid var(--brd); align-items: center; }
-        .btn { padding: 8px 16px; cursor: pointer; border: 1px solid var(--brd); background: var(--btn); color: white; font-size: 11px; font-weight: 600; border-radius: 4px; transition: all 0.2s; text-transform: uppercase; }
-        .btn:hover { background: var(--btn-hover); border-color: var(--acc); }
-        .btn-run { background: var(--acc); color: #0f111a; border: none; }
-        .btn-run:hover { background: #82b1ff; transform: translateY(-1px); }
-        
-        /* Dropdown */
-        .dropdown-wrapper { position: relative; }
-        select { background: #21252b; color: #abb2bf; border: 1px solid var(--brd); padding: 7px 12px; font-size: 11px; border-radius: 4px; outline: none; cursor: pointer; appearance: none; -webkit-appearance: none; padding-right: 30px; }
-        .dropdown-wrapper::after { content: '▼'; position: absolute; right: 10px; top: 8px; font-size: 8px; color: #5c6370; pointer-events: none; }
-
-        /* Main Workspace */
-        .workspace { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--brd); overflow: hidden; }
-        .editor-container { display: flex; flex-direction: column; background: var(--bg); position: relative; }
-        .editor-header { padding: 8px 15px; font-size: 10px; color: #5c6370; background: #12141c; border-bottom: 1px solid var(--brd); font-weight: bold; }
-        
-        textarea { 
-            flex: 1; background: transparent; color: #abb2bf; 
-            border: none; padding: 20px; font-family: 'Consolas', monospace; 
-            font-size: 13px; border-radius: 0; resize: none; outline: none; line-height: 1.6;
-        }
-        #out { color: #d19a66; background: #0c0e14; }
-
-        /* Status Bar */
-        .status-bar { background: #1a1c25; color: #5c6370; padding: 5px 15px; font-size: 10px; display: flex; justify-content: space-between; border-top: 1px solid var(--brd); }
-        .status-active { color: var(--suc); font-weight: bold; }
+        :root { --bg: #0a0c10; --panel: #12151c; --brd: #2a2e3a; --acc: #f69d50; --txt: #adbac7; }
+        body { background: var(--bg); color: var(--txt); font-family: 'Consolas', monospace; margin: 0; display: flex; flex-direction: column; height: 100vh; }
+        .toolbar { padding: 12px; background: var(--panel); border-bottom: 1px solid var(--brd); display: flex; gap: 10px; align-items: center; }
+        .workspace { display: grid; grid-template-columns: 1fr 1fr; flex: 1; gap: 1px; background: var(--brd); }
+        textarea { background: var(--bg); color: #768390; border: none; padding: 20px; resize: none; outline: none; font-size: 13px; }
+        #out { color: var(--acc); background: #07090d; }
+        .btn { padding: 8px 16px; cursor: pointer; border: 1px solid var(--brd); background: #22272e; color: white; font-size: 11px; border-radius: 4px; }
+        .btn-run { background: var(--acc); color: #000; border: none; font-weight: bold; }
+        .status { padding: 5px 20px; font-size: 10px; background: #000; color: var(--acc); border-top: 1px solid var(--brd); }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <div class="logo-text">POBFUS_STUDIO</div>
-            <div class="version-tag">ENGINE_V1.11.01</div>
-        </div>
-
-        <div class="toolbar">
-            <button class="btn btn-run" id="go">OBFUSCATE</button>
-            <div class="dropdown-wrapper">
-                <select id="scriptSelect">
-                    <option value="" disabled selected>STRESS_TEST_SCRIPTS</option>
-                    <option value="fib">Fibonacci Algorithm</option>
-                    <option value="print">Global Environment Test</option>
-                    <option value="aim">Complex Userdata Logic</option>
-                    <option value="full">High-Stress Instruction Suite</option>
-                </select>
-            </div>
-            <button class="btn" id="cp">COPY_RAW</button>
-            <button class="btn" id="dl">DOWNLOAD</button>
-            <button class="btn" id="cl" style="margin-left:auto; border-color: var(--err); color: var(--err);">CLEAR</button>
-        </div>
-
-        <div class="workspace">
-            <div class="editor-container">
-                <div class="editor-header">LUA_SOURCE_INPUT</div>
-                <textarea id="in" placeholder="-- Input Lua Source Code..."></textarea>
-            </div>
-            <div class="editor-container">
-                <div class="editor-header">VIRTUALIZED_OUTPUT_BRICK</div>
-                <textarea id="out" readonly placeholder="-- Obfuscated output will be generated here..."></textarea>
-            </div>
-        </div>
-
-        <div class="status-bar">
-            <div>STATUS: <span id="status" class="status-active">READY</span></div>
-            <div>CAMBUSCATE_KERNEL_0.2.1 | LUA_5.1_COMPATIBLE</div>
-        </div>
+    <div class="toolbar">
+        <b style="color:var(--acc)">POBFUS_JS_V1.11.01</b>
+        <button class="btn btn-run" id="go">VIRTUALIZE_JS</button>
+        <button class="btn" id="cp">COPY_BRICK</button>
+        <button class="btn" id="cl">CLEAR</button>
     </div>
+    <div class="workspace">
+        <textarea id="in" placeholder="// Input JavaScript Source..."></textarea>
+        <textarea id="out" readonly placeholder="// Obfuscated JS Output..."></textarea>
+    </div>
+    <div class="status" id="st">ENGINE_STATUS: BETA</div>
     <script src="script.js"></script>
 </body>
-                </html>
+    </html>
