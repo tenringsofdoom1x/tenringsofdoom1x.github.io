@@ -3,85 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>pobfus // repository</title>
+    <title>pobfus // v1.12.01-1</title>
     <style>
-        :root { --bg: #050505; --panel: #0a0a0a; --brd: #151515; --txt: #777; --main: #fff; --acc: #00ff88; --scroll: #222; }
-        * { box-sizing: border-box; font-family: "fira code", monospace; text-transform: lowercase; }
+        :root { --bg: #020202; --panel: #0a0a0a; --brd: #1a1a1a; --main: #ffffff; --acc: #00ff88; }
+        * { box-sizing: border-box; font-family: "fira code", monospace; }
         body { background: var(--bg); color: var(--main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+
+        /* Sidebar */
+        .sidebar { width: 380px; background: var(--panel); border-right: 1px solid var(--brd); padding: 40px; display: flex; flex-direction: column; gap: 20px; }
+        .version-tag { font-size: 9px; color: var(--acc); letter-spacing: 2px; font-weight: bold; border: 1px solid var(--acc); width: fit-content; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
+        .btn { background: var(--acc); color: #000; border: none; padding: 16px; cursor: pointer; border-radius: 4px; font-weight: 900; font-size: 11px; text-transform: uppercase; transition: 0.3s; }
+        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+
+        /* Editor */
+        .main { flex: 1; display: flex; background: #050505; }
+        .editor-container { flex: 1; display: flex; flex-direction: column; position: relative; border-right: 1px solid var(--brd); }
+        textarea { width: 100%; height: 100%; padding: 40px; background: transparent; border: none; outline: none; font-size: 13px; line-height: 1.8; position: absolute; white-space: pre; overflow: auto; color: #888; z-index: 2; resize: none; }
+        #out { background: #010101; color: var(--acc); z-index: 3; }
+
+        /* Status Overlay */
+        #output-loader { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #020202; z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
+        .lua-logo { width: 80px; margin-bottom: 30px; transition: 0.5s; filter: drop-shadow(0 0 10px rgba(0,255,136,0.2)); }
+        .lua-logo.fade { opacity: 0.1; transform: scale(0.9) rotate(5deg); }
         
-        .sidebar { width: 420px; min-width: 420px; background: var(--panel); border-right: 1px solid var(--brd); padding: 30px; display: flex; flex-direction: column; gap: 18px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--scroll) transparent; }
-        .sidebar::-webkit-scrollbar { width: 4px; }
-        .sidebar::-webkit-scrollbar-thumb { background: var(--scroll); }
-
-        .brand-row { display: flex; align-items: center; gap: 15px; margin-bottom: 5px; }
-        .lua-logo { width: 40px; height: 40px; border-radius: 50%; transition: 0.3s; }
-        .pulse { animation: heartbeat 1s infinite ease-in-out; filter: drop-shadow(0 0 12px var(--acc)); }
-        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
-
-        .v-badge { background: #111; color: var(--acc); font-size: 10px; padding: 6px 16px; border-radius: 4px; border: 1px solid #222; width: fit-content; font-weight: 800; }
+        #status-log { height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; }
+        .status-entry { font-size: 10px; color: var(--acc); margin-top: 6px; animation: popUp 0.3s forwards; text-transform: uppercase; letter-spacing: 1px; }
+        .status-entry.dim { color: #222; }
         
-        .section-title { font-size: 11px; color: var(--acc); font-weight: 800; margin-top: 25px; letter-spacing: 1.5px; border-bottom: 1px solid #111; padding-bottom: 8px; text-transform: uppercase; }
-        .log-box { font-size: 10px; color: var(--txt); line-height: 1.7; padding: 12px 0; }
-        .log-item { margin-bottom: 12px; border-left: 2px solid #1a1a1a; padding-left: 10px; transition: 0.2s; }
-        .log-item:hover { border-left-color: var(--acc); color: #aaa; }
-        .log-item b { color: #eee; font-weight: 700; }
+        .progress-bg { width: 250px; height: 1px; background: #111; margin-top: 30px; }
+        .progress-fill { width: 0%; height: 100%; background: var(--acc); transition: 0.3s; }
 
-        .btn { background: transparent; border: 1px solid var(--brd); color: var(--txt); padding: 15px; cursor: pointer; border-radius: 4px; text-align: left; width: 100%; transition: 0.2s; font-size: 12px; font-weight: 600; }
-        .btn-run { background: var(--main); color: #000; border: none; font-weight: 900; margin-top: 10px; }
-        .btn:hover { border-color: var(--acc); color: var(--main); background: #0c0c0c; }
-
-        .main { flex: 1; display: flex; background: var(--brd); }
-        .editor-container { flex: 1; display: flex; flex-direction: column; background: var(--bg); position: relative; }
-        textarea { flex: 1; background: transparent; border: none; color: var(--main); padding: 45px; resize: none; outline: none; font-size: 13px; line-height: 1.8; }
-        
-        #overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; flex-direction: column; align-items: center; justify-content: center; }
-        .bar-bg { width: 350px; height: 1px; background: #111; margin-top: 25px; }
-        .bar-fill { width: 0%; height: 100%; background: var(--acc); transition: width 5s linear; }
+        @keyframes popUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
-    <div id="overlay">
-        <div id="stxt" style="font-size: 11px; letter-spacing: 3px; color: var(--acc); font-weight: 900;">CALIBRATING GHOST CORE...</div>
-        <div class="bar-bg"><div class="bar-fill" id="lbar"></div></div>
-    </div>
-
     <div class="sidebar">
-        <div class="brand-row">
-            <img src="https://i.ibb.co/HThqqB3k/icons8-lua-logo.jpg" class="lua-logo" id="logo" alt="lua">
-            <div style="font-size: 26px; font-weight: 900; letter-spacing: -1px;">pobfus</div>
-        </div>
-        <div class="v-badge">v1.11.06 ghost-core</div>
-
-        <button class="btn btn-run" id="go">execute process</button>
-        <button class="btn" id="dl">download build</button>
-        <button class="btn" id="cl">purge buffer</button>
-
-        <div class="section-title">Timeline // Rapid-Patches</div>
-        <div class="log-box">
-            <div class="log-item"><b>1.12.00:</b> [nebula] bytecode virtualization. (upcoming)</div>
-            <div class="log-item"><b>1.11.06:</b> current build; synapse z / delta optimized.</div>
-            <div class="log-item"><b>1.11.05:</b> introduced <b>protected metatables</b> to block registry dumps.</div>
-            <div class="log-item"><b>1.11.03-2:</b> hotfix for logic-leakage and table index collision.</div>
-            <div class="log-item"><b>1.11.01:</b> prototype <b>registry-shuffling</b>; abandoned linear masking.</div>
-            <div class="log-item"><b>1.0.6 beta:</b> fixed failing js engine and syntax output.</div>
-            <div class="log-item"><b>0.7.00:</b> genesis era; automated xor masking.</div>
-        </div>
-
-        <div class="section-title">Maintenance Record</div>
-        <div class="log-box">
-            the 1.11 series was defined by rapid evolution. <b>v1.11.01</b> proved that fragmented registries were the future. <b>v1.11.03-2</b> was a critical hotfix that stopped "ghost-collisions" where code fragments would overwrite each other. <b>v1.11.05</b> finaly sealed the engine with the protected metatable layer.
-        </div>
-
-        <div style="margin-top:auto; padding-top:25px; font-size:10px; color:#222; text-align: center;">
-            authorized: <b>tenringsofdoom1x.github.io</b>
+        <div class="version-tag">STABLE v1.12.01-1</div>
+        <div style="font-size: 32px; font-weight: 900; letter-spacing: -2px; color: var(--main);">pobfus</div>
+        <button class="btn" id="go">Protect Script</button>
+        <div style="font-size: 11px; color: #444; line-height: 1.6; text-transform: lowercase;">
+            industrial grade lua obfuscation. <br>
+            premium tamper response: <b>active</b>.
         </div>
     </div>
 
     <div class="main">
-        <div class="editor-container" style="border-right: 1px solid var(--brd);"><textarea id="in" spellcheck="false" placeholder="-- source_input"></textarea></div>
-        <div class="editor-container"><textarea id="out" spellcheck="false" readonly placeholder="-- ghost_output"></textarea></div>
+        <div class="editor-container">
+            <textarea id="in" spellcheck="false" placeholder="-- input source code"></textarea>
+        </div>
+        <div class="editor-container">
+            <div id="output-loader">
+                <img src="https://www.lua.org/images/lua-logo.gif" class="lua-logo" id="luaImg">
+                <div id="status-log"></div>
+                <div class="progress-bg"><div class="progress-fill" id="lbar"></div></div>
+            </div>
+            <textarea id="out" spellcheck="false" readonly placeholder="-- protected output"></textarea>
+        </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
