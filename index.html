@@ -5,59 +5,79 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>pobfus // v1.12.01-1</title>
     <style>
-        :root { --bg: #020202; --panel: #0a0a0a; --brd: #1a1a1a; --main: #ffffff; --acc: #00ff88; }
-        * { box-sizing: border-box; font-family: "fira code", monospace; }
+        :root { --bg: #0d1117; --panel: #161b22; --brd: #30363d; --main: #c9d1d9; --acc: #238636; --gh: #f0f6fc; }
+        * { box-sizing: border-box; font-family: -apple-system, "Fira Code", monospace; text-transform: lowercase; }
         body { background: var(--bg); color: var(--main); margin: 0; display: flex; height: 100vh; overflow: hidden; }
 
         /* Sidebar */
-        .sidebar { width: 380px; background: var(--panel); border-right: 1px solid var(--brd); padding: 40px; display: flex; flex-direction: column; gap: 20px; }
-        .version-tag { font-size: 9px; color: var(--acc); letter-spacing: 2px; font-weight: bold; border: 1px solid var(--acc); width: fit-content; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; }
-        .btn { background: var(--acc); color: #000; border: none; padding: 16px; cursor: pointer; border-radius: 4px; font-weight: 900; font-size: 11px; text-transform: uppercase; transition: 0.3s; }
-        .btn:hover { filter: brightness(1.2); transform: translateY(-1px); }
+        .sidebar { width: 380px; background: var(--panel); border-right: 1px solid var(--brd); padding: 30px; display: flex; flex-direction: column; gap: 15px; }
+        .version-tag { font-size: 10px; color: #8b949e; border: 1px solid var(--brd); width: fit-content; padding: 2px 8px; border-radius: 6px; }
+        .nav-btn { background: var(--acc); color: #fff; border: 1px solid rgba(240,246,252,0.1); padding: 12px; cursor: pointer; border-radius: 6px; font-weight: 600; font-size: 13px; transition: 0.2s; }
+        .nav-btn:hover { background: #2ea043; }
+        .sec-btn { background: #21262d; color: #c9d1d9; border: 1px solid var(--brd); padding: 10px; cursor: pointer; border-radius: 6px; font-size: 12px; transition: 0.2s; }
+        .sec-btn:hover { background: #30363d; }
+        
+        /* Text Content */
+        .section-title { font-size: 12px; font-weight: 600; color: #8b949e; border-bottom: 1px solid var(--brd); padding-bottom: 5px; margin-top: 10px; }
+        .log-text { font-size: 11px; color: #7d8590; line-height: 1.6; margin: 5px 0; }
 
-        /* Editor */
-        .main { flex: 1; display: flex; background: #050505; }
+        /* Editors */
+        .main { flex: 1; display: flex; background: #010409; }
         .editor-container { flex: 1; display: flex; flex-direction: column; position: relative; border-right: 1px solid var(--brd); }
-        textarea { width: 100%; height: 100%; padding: 40px; background: transparent; border: none; outline: none; font-size: 13px; line-height: 1.8; position: absolute; white-space: pre; overflow: auto; color: #888; z-index: 2; resize: none; }
-        #out { background: #010101; color: var(--acc); z-index: 3; }
+        textarea { width: 100%; height: 100%; padding: 40px; background: transparent; border: none; outline: none; font-size: 13px; line-height: 1.8; position: absolute; white-space: pre; overflow: auto; color: #c9d1d9; z-index: 2; resize: none; }
+        #out { background: #0d1117; color: #7ee787; z-index: 3; }
 
-        /* Status Overlay */
-        #output-loader { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #020202; z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
-        .lua-logo { width: 80px; margin-bottom: 30px; transition: 0.5s; filter: drop-shadow(0 0 10px rgba(0,255,136,0.2)); }
-        .lua-logo.fade { opacity: 0.1; transform: scale(0.9) rotate(5deg); }
-        
-        #status-log { height: 80px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; }
-        .status-entry { font-size: 10px; color: var(--acc); margin-top: 6px; animation: popUp 0.3s forwards; text-transform: uppercase; letter-spacing: 1px; }
-        .status-entry.dim { color: #222; }
-        
-        .progress-bg { width: 250px; height: 1px; background: #111; margin-top: 30px; }
-        .progress-fill { width: 0%; height: 100%; background: var(--acc); transition: 0.3s; }
+        /* Overlay Loader */
+        #output-loader { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: #0d1117; z-index: 100; flex-direction: column; align-items: center; justify-content: center; }
+        #gh-spinner { width: 60px; fill: var(--gh); margin-bottom: 25px; opacity: 0.8; }
+        #gh-spinner.spinning { animation: ghSpin 1s linear infinite; }
 
-        @keyframes popUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #status-log { height: 60px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; overflow: hidden; }
+        .status-entry { font-size: 11px; color: #58a6ff; margin-top: 4px; animation: slideIn 0.2s forwards; letter-spacing: 1px; }
+        .status-entry.dim { color: #30363d; }
+        
+        .p-bar { width: 200px; height: 2px; background: #21262d; border-radius: 10px; margin-top: 25px; overflow: hidden; }
+        .p-fill { width: 0%; height: 100%; background: var(--acc); transition: 0.3s; }
+
+        @keyframes ghSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
     <div class="sidebar">
-        <div class="version-tag">STABLE v1.12.01-1</div>
-        <div style="font-size: 32px; font-weight: 900; letter-spacing: -2px; color: var(--main);">pobfus</div>
-        <button class="btn" id="go">Protect Script</button>
-        <div style="font-size: 11px; color: #444; line-height: 1.6; text-transform: lowercase;">
-            industrial grade lua obfuscation. <br>
-            premium tamper response: <b>active</b>.
+        <div class="version-tag">v1.12.01-1 stable</div>
+        <div style="font-size: 24px; font-weight: 600;">pobfus</div>
+        
+        <button class="nav-btn" id="go">protect script</button>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <button class="sec-btn" id="clear">clear</button>
+            <button class="sec-btn" id="dl" disabled>download</button>
+        </div>
+
+        <div class="section-title">history</div>
+        <div class="log-text">
+            originally built for simple minification, pobfus v1.12.01-1 now utilizes environment-aware virtualization to prevent string dumping.
+        </div>
+
+        <div class="section-title">updates</div>
+        <div class="log-text">
+            • premium unicode tamper<br>
+            • improved vm stack build<br>
+            • logic-gated obfuscation
         </div>
     </div>
 
     <div class="main">
         <div class="editor-container">
-            <textarea id="in" spellcheck="false" placeholder="-- input source code"></textarea>
+            <textarea id="in" spellcheck="false" placeholder="-- input lua code"></textarea>
         </div>
         <div class="editor-container">
             <div id="output-loader">
-                <img src="https://www.lua.org/images/lua-logo.gif" class="lua-logo" id="luaImg">
+                <svg id="gh-spinner" viewBox="0 0 16 16"><path d="M8 0c4.42 0 8 3.58 8 8a8.013 8.013 0 0 1-5.45 7.59c-.4.08-.55-.17-.55-.38 0-.27.01-1.13.01-2.2 0-.75-.25-1.23-.54-1.48 1.78-.2 3.65-.88 3.65-3.95 0-.88-.31-1.59-.82-2.15.08-.2.36-1.02-.08-2.12 0 0-.67-.22-2.2.82-.64-.18-1.32-.27-2-.27-.68 0-1.36.09-2 .27-1.53-1.03-2.2-.82-2.2-.82-.44 1.1-.16 1.92-.08 2.12-.51.56-.82 1.28-.82 2.15 0 3.06 1.86 3.75 3.64 3.95-.23.2-.44.55-.51 1.07-.46.21-1.61.55-2.33-.66-.15-.24-.6-.83-1.23-.82-.67.01-.27.38.01.53.34.19.73.9.82 1.13.16.45.68 1.31 2.69.94 0 .67.01 1.3.01 1.49 0 .21-.15.45-.55.38A7.995 7.995 0 0 1 0 8c0-4.42 3.58-8 8-8Z"></path></svg>
                 <div id="status-log"></div>
-                <div class="progress-bg"><div class="progress-fill" id="lbar"></div></div>
+                <div class="p-bar"><div class="p-fill" id="lbar"></div></div>
             </div>
-            <textarea id="out" spellcheck="false" readonly placeholder="-- protected output"></textarea>
+            <textarea id="out" spellcheck="false" readonly placeholder="-- protected code"></textarea>
         </div>
     </div>
     <script src="script.js"></script>
