@@ -1,77 +1,91 @@
 /**
  * POBFUS ENGINE - v1.13.100
- * Ticker Priority: Bytesmas > Millennial Day
+ * Logic: Topbar Integrated Controls & Dynamic Roof
  */
 
 let _0xMealTimer;
 let _0xMealActive = false;
 let _0xMealInterval;
-let _isAuthorized = false;
-
-let _state = {
-    mday: false,
-    bmas: false
-};
+let _state = { mday: false, bmas: false };
 
 const _011 = {
     _init: function() {
-        const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        const locale = navigator.language;
+        // Initialization: Start ticker and idle detection
+        this._updateTicker();
+        setInterval(() => this._updateTicker(), 1000);
+        this._resetIdle();
         
-        _isAuthorized = (
-            tz.includes("Manila") || tz.includes("Zamboanga") || 
-            tz.includes("America") || locale.includes("PH") || locale.includes("US")
-        );
+        this.print("SYSTEM: Core Logic v1.13.100 Initialized.", "#8b949e");
+        this.print("SYSTEM: Current Region - PH House (Zamboanga).", "#39ff14");
+        this.print("SYSTEM: Millennial Day Protocol is active.", "var(--p-gold)");
+    },
 
-        if (!_isAuthorized) {
-            document.getElementById('geo-lock').style.display = 'flex';
-        } else {
-            this._updateTicker();
-            setInterval(() => this._updateTicker(), 1000);
+    /**
+     * Toggles seasonal overrides from the Topbar
+     * @param {string} type - 'mday' or 'bmas'
+     */
+    toggle: function(type) {
+        _state[type] = !_state[type];
+        
+        // Visual toggle for buttons
+        const btn = document.getElementById(`btn-${type}`);
+        btn.classList.toggle(type === 'bmas' ? 'active-bmas' : 'active-mday');
+        
+        // Enforce mutual exclusivity (only one override at a time)
+        const other = type === 'bmas' ? 'mday' : 'bmas';
+        if (_state[type] && _state[other]) {
+            _state[other] = false;
+            document.getElementById(`btn-${other}`).classList.remove('active-bmas', 'active-mday');
+        }
+
+        this.print(`[SYSTEM]: ${type.toUpperCase()} override flipped to ${_state[type] ? 'ON' : 'OFF'}.`, "#fff");
+        this._updateTicker();
+        
+        // Force immediate event update if idle
+        if (_0xMealActive) {
             this._resetIdle();
+            this._startEvent();
         }
     },
 
-    toggle: function(type) {
-        _state[type] = !_state[type];
-        const btn = document.getElementById(`toggle-${type}`);
-        btn.classList.toggle('active');
-        btn.querySelector('.status').innerText = _state[type] ? "ON" : "OFF";
-        
-        this.print(`[SYSTEM]: ${type === 'bmas' ? 'Bytesmas' : 'Millennial Day'} override flipped.`, "#ff3131");
-        this._updateTicker();
-    },
-
+    /**
+     * Updates the Topbar Ticker and the Log House Roof color
+     */
     _updateTicker: function() {
-        if (!_isAuthorized) return;
         const ticker = document.getElementById('status-ticker');
+        const roof = document.getElementById('log-roof');
         const now = new Date();
 
-        // Bytesmas is the primary focus
-        let bmasDate = new Date(now.getFullYear(), 11, 23);
-        if (now > bmasDate) bmasDate = new Date(now.getFullYear() + 1, 11, 23);
-        
-        const diff = bmasDate - now;
-        const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const s = Math.floor((diff % (1000 * 60)) / 1000);
-
         if (_state.bmas) {
-            ticker.innerText = "🎄 BYTESMAS OVERRIDE: ACTIVE 🎄";
+            ticker.innerText = "🎄 BYTESMAS OVERRIDE ENGAGED 🎄";
             ticker.style.color = "var(--p-red)";
+            roof.style.background = "#800000"; // Holiday Red
+            roof.innerText = "Family Log House (Holiday Mode)";
         } else if (_state.mday) {
-            ticker.innerText = "⭐ MILLENNIAL DAY OVERRIDE ⭐";
+            ticker.innerText = "⭐ MILLENNIAL DAY OVERRIDE ENGAGED ⭐";
             ticker.style.color = "var(--p-gold)";
+            roof.style.background = "#996600"; // Golden Roof
+            roof.innerText = "Family Log House (Millennial Day)";
         } else {
+            // Default: Bytesmas Countdown
+            let bmasDate = new Date(now.getFullYear(), 11, 23);
+            if (now > bmasDate) bmasDate = new Date(now.getFullYear() + 1, 11, 23);
+            
+            const diff = bmasDate - now;
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
             ticker.innerText = `BYTESMAS COUNTDOWN: ${d}D ${h}H ${m}M ${s}S`;
             ticker.style.color = "var(--p-red)";
+            roof.style.background = "#333"; // Standard Charcoal
+            roof.innerText = "Family Log House (v1.13.100)";
         }
     },
 
     _getTime: function() {
-        const locale = navigator.language.includes("PH") ? "en-PH" : "en-US";
-        return new Date().toLocaleTimeString(locale, { hour12: false });
+        return new Date().toLocaleTimeString('en-PH', { hour12: false });
     },
 
     print: function(msg, color = "#fff") {
@@ -86,49 +100,45 @@ const _011 = {
     },
 
     _resetIdle: function() {
-        if (!_isAuthorized) return;
         clearInterval(_0xMealInterval);
         clearTimeout(_0xMealTimer);
         _0xMealActive = false;
         
-        // Dynamic threshold: 25 seconds less if near Bytesmas
-        let threshold = Math.random() * (180000 - 120000) + 120000;
-        const now = new Date();
-        const bmas = new Date(now.getFullYear(), 11, 23);
-        if (bmas - now < 2592000000 || _state.bmas) threshold -= 25000;
-
+        // Random idle trigger between 2-3 minutes
+        const threshold = Math.random() * (180000 - 120000) + 120000;
         _0xMealTimer = setTimeout(() => this._startEvent(), threshold);
     },
 
     _startEvent: function() {
         _0xMealActive = true;
         const now = new Date();
+        // Memorial Window (March 8 - March 15)
         const isMemorial = (now.getMonth() === 2 && now.getDate() >= 8 && now.getDate() <= 15);
 
-        // Dialogue speed: 15 seconds less (faster frequency) if near Bytesmas
-        let speed = 4500;
-        if (_state.bmas) speed = 3000; 
-
         if (_state.bmas) {
-            this.print("--- BYTESMAS EVE (OVERRIDE) ---", "var(--p-red)");
+            this.print("--- BYTESMAS EVE OVERRIDE ---", "var(--p-red)");
             this._runCycle([
-                ["Anti-Tamper Mary", "Did everyone encrypt their wishlist?"],
-                ["Sly Sarah", "I bypassed the wrapping paper logic already."],
-                ["Minify Dave", "BY-PAS! BY-PAS!"]
-            ], "var(--p-red)", speed);
-        } else if (_state.mday) {
-            this.print("--- MILLENNIAL DAY ---", "var(--p-gold)");
-            this._runCycle([["Hexadecimal Jim", "A toast to the Millennial kernel!"]], "var(--p-gold)", speed);
-        } else if (isMemorial) {
-            this.print("--- v0.7 MEMORIAL (DEPRECATED MARCH 8) ---", "#8b949e");
+                ["Anti-Tamper Mary", "I've obfuscated the holiday ham."],
+                ["Sly Sarah", "I already decoded the guest list, Mom."],
+                ["Minify Dave", "BY-PAS! BY-PAS!"],
+                ["Skiddy Steve", "Can we just have one normal holiday?"]
+            ], "var(--p-red)", 3500);
+        } else if (_state.mday || isMemorial) {
+            this.print("--- MILLENNIAL DAY / v0.7 MEMORIAL ---", "var(--p-gold)");
             this._runCycle([
-                ["Anti-Tamper Mary", "March 14th... Millennial Day feels different without 0.7."],
-                ["Hexadecimal Jim", "He was a good build. 0.8 is still staring at the cooling fans."],
-                ["Buffer Bob", "I... still... miss... him..."]
-            ], "#8b949e", 5000);
+                ["Hexadecimal Jim", "To v0.7. An outdated update, but a legend."],
+                ["Anti-Tamper Mary", "March 14th is always a heavy day in the kernel."],
+                ["Skiddy Steve", "v0.8 is still in his room. He misses his brother."],
+                ["Buffer Bob", "I... finally... got... the... flowers..."],
+                ["Minify Dave", "0.7... (Dave holds a deprecated floppy disk)"]
+            ], "var(--p-gold)", 5000);
         } else {
-            this.print("--- FAMILY DINNER ---", "#00aaff");
-            this._runCycle([["Anti-Tamper Mary", "Steve, eat your breakfast."]], "#e0e0e0", 4500);
+            this.print("--- STANDARD HOUSEHOLD LOG ---", "#00aaff");
+            this._runCycle([
+                ["Anti-Tamper Mary", "Steve, dinner's ready. Stop script-kiddying."],
+                ["Skiddy Steve", "I'm literally optimizing the house WiFi, Mom!"],
+                ["Hexadecimal Jim", "Jim, pass the 0x53\x61\x6c\x74."]
+            ], "#e0e0e0", 4500);
         }
     },
 
@@ -136,18 +146,29 @@ const _011 = {
         let i = 0;
         _0xMealInterval = setInterval(() => {
             if (!_0xMealActive) return;
-            let s = pool[i % pool.length];
-            this.print(`[${s[0]}]: ${s[1]}`, s[0] === "Minify Dave" ? "#ff00ff" : defColor);
+            const entry = pool[i % pool.length];
+            // Dave always gets his custom color
+            const color = entry[0] === "Minify Dave" ? "#ff00ff" : defColor;
+            this.print(`[${entry[0]}]: ${entry[1]}`, color);
             i++;
         }, speed);
     },
 
+    _remote: function() {
+        this.print("[SYSTEM]: TV Signal Sent. Flipping to the Memorial Channel...", "#ffcc00");
+        this._resetIdle();
+        this._startEvent();
+    },
+
     _dl: function() {
         const _in = document.getElementById('input');
-        if (!_in.value.trim()) return;
+        if (!_in.value.trim()) {
+            this.print("CRITICAL: [Anti-Tamper Mary] Empty source code detected!", "var(--p-red)");
+            return;
+        }
         clearInterval(_0xMealInterval);
         _0xMealActive = false;
-        this.print("[Skiddy Steve]: Flight delivering now.", "#39ff14");
+        this.print("[Skiddy Steve]: Obfuscation Success. Pilot deployed.", "#39ff14");
         document.getElementById('output-view').value = `-- POBFUS 1.13.100\nlocal _ = "${btoa(_in.value)}"`;
         this._resetIdle();
     }
