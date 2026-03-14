@@ -2,166 +2,148 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>POBFUS | 1.13.100</title>
     <style>
-        /* POBFUS SYSTEM PALETTE */
-        :root { 
-            --p-green: #39ff14; 
+        :root {
+            --gh-bg: #0d1117;
+            --gh-border: #30363d;
+            --gh-text: #c9d1d9;
+            --rbx-log-bg: #1b1b1b;
+            --p-green: #39ff14;
+            --p-blue: #79c0ff;
+            --p-purple: #d2a8ff;
             --p-red: #ff3131;
-            --p-blue: #00aaff;
-            --p-pink: #ff00ff;
-            --p-gold: #ffcc00;
-            --bg: #050505; 
-            --panel: #0d0d0d;
-            --border: rgba(57, 255, 20, 0.15); 
-        }
-        
-        body { 
-            background: var(--bg); 
-            color: #eeeeee; 
-            font-family: 'Consolas', 'Courier New', monospace; 
-            margin: 0; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            height: 100vh;
-        }
-        
-        /* Anti-Tamper Mary's Error Bar */
-        #err-bar {
-            width: 100%; 
-            background: var(--p-red); 
-            color: #fff; 
-            text-align: center;
-            padding: 10px 0; 
-            font-weight: bold; 
-            font-size: 12px; 
-            display: none;
-            position: absolute; 
-            top: 0; 
-            z-index: 999;
-            box-shadow: 0 4px 10px rgba(255, 49, 49, 0.3);
         }
 
-        header { 
-            width: 100%; 
-            padding: 15px 0; 
-            border-bottom: 1px solid var(--border); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 15px; 
-            background: #000; 
-        }
-        
-        #lua-logo-main { 
-            width: 42px;
-            filter: brightness(0) invert(1); 
-            opacity: 0.8;
-        }
-        
-        main { 
-            width: 90%; 
-            max-width: 1100px; 
-            padding-top: 20px;
+        body {
+            background-color: #010409;
+            color: var(--gh-text);
+            font-family: "JetBrains Mono", "Fira Code", monospace;
+            margin: 0;
             display: flex;
             flex-direction: column;
-            flex-grow: 1;
-        }
-        
-        /* ROBLOX STUDIO OUTPUT EMULATION */
-        #steve-logs { 
-            background: #000; 
-            border: 1px solid var(--border); 
-            padding: 12px; 
-            height: 180px; 
-            overflow-y: auto; 
-            font-size: 12px; 
-            line-height: 1.5;
-            margin-bottom: 15px; 
-            border-radius: 3px;
-            white-space: pre-wrap;
-            scrollbar-width: thin;
-            scrollbar-color: #333 #000;
+            height: 100vh;
+            overflow: hidden;
         }
 
-        /* TEXTAREA & INPUT */
-        .editor-container { position: relative; flex-grow: 1; margin-bottom: 20px; }
-        
-        textarea { 
-            width: 100%; 
-            height: 100%;
-            min-height: 350px;
-            background: var(--panel); 
-            border: 1px solid #1a1a1a; 
-            color: #d4d4d4; 
-            padding: 15px; 
-            outline: none; 
-            font-family: 'Consolas', monospace; 
-            resize: none; 
-            box-sizing: border-box;
-            border-radius: 4px;
-            transition: border 0.3s;
-        }
-        
-        textarea:focus { border: 1px solid var(--p-green); }
-
-        .btn-row { 
-            display: flex; 
-            justify-content: flex-end; 
-            padding-bottom: 30px;
+        /* HEADER: Lua logo on the left of the title */
+        header {
+            background: var(--gh-bg);
+            border-bottom: 1px solid var(--gh-border);
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        button { 
-            background: transparent; 
-            border: 1px solid var(--p-green); 
-            color: var(--p-green); 
-            padding: 12px 30px; 
-            cursor: pointer; 
-            font-family: inherit; 
-            font-weight: bold;
-            transition: all 0.2s ease-in-out;
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        #lua-logo-main {
+            width: 24px;
+            filter: invert(1);
+        }
+
+        /* DUAL PANES */
+        .workspace {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            border-bottom: 1px solid var(--gh-border);
+        }
+
+        .pane {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid var(--gh-border);
+        }
+
+        .pane-label {
+            background: #161b22;
+            padding: 6px 15px;
+            font-size: 11px;
+            color: #8b949e;
             text-transform: uppercase;
+            border-bottom: 1px solid var(--gh-border);
         }
-        
-        button:hover { 
-            background: var(--p-green); 
-            color: #000; 
-            box-shadow: 0 0 15px rgba(57, 255, 20, 0.4); 
+
+        textarea {
+            flex: 1;
+            background: var(--gh-bg);
+            border: none;
+            padding: 15px;
+            font-family: inherit;
+            font-size: 13px;
+            resize: none;
+            outline: none;
+            line-height: 1.6;
         }
+
+        #input { color: var(--p-blue); }
+        #output-view { color: var(--p-purple); background: #090c10; }
+
+        /* ROBLOX 2017-2019 LOGS: Scrollable & Bottom-fixed */
+        #steve-logs {
+            height: 220px;
+            background: var(--rbx-log-bg);
+            border-top: 2px solid #444;
+            overflow-y: auto; /* Scrollable */
+            padding: 10px;
+            font-family: "Consolas", monospace;
+            font-size: 12px;
+            color: #fff;
+        }
+
+        .log-entry { margin-bottom: 3px; white-space: pre-wrap; border-left: 2px solid transparent; }
+        .log-ts { color: #888; margin-right: 10px; }
+
+        button {
+            background: #238636;
+            color: white;
+            border: 1px solid rgba(240,246,252,0.1);
+            padding: 6px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+
+        button:hover { background: #2ea043; }
 
         /* Scrollbar Styling */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #000; }
-        ::-webkit-scrollbar-thumb { background: #222; }
-        ::-webkit-scrollbar-thumb:hover { background: #333; }
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #010409; }
+        ::-webkit-scrollbar-thumb { background: #30363d; border-radius: 5px; }
     </style>
 </head>
 <body>
 
-    <div id="err-bar">SYSTEM ALERT: POBFUS KERNEL REJECTED REQUEST</div>
+<header>
+    <div class="header-brand">
+        <img id="lua-logo-main" src="https://img.icons8.com/?size=128&id=42bqS7y7Ga9o&format=png" alt="Lua">
+        <span style="font-weight: bold; letter-spacing: 0.5px;">POBFUS <span style="color:#6e7681; font-weight: normal;">v1.13.100</span></span>
+    </div>
+    <button onclick="_011._dl()">Execute & Download</button>
+</header>
 
-    <header>
-        <img id="lua-logo-main" src="" alt="Lua Logo">
-        <h1 style="font-size: 1.2rem; color: var(--p-green); margin: 0; letter-spacing: 2px;">
-            POBFUS <span style="font-size: 0.7rem; color: #555; vertical-align: middle; margin-left: 5px;">[BUILD 1.13.100]</span>
-        </h1>
-    </header>
+<div class="workspace">
+    <div class="pane">
+        <div class="pane-label">Source.lua</div>
+        <textarea id="input" spellcheck="false" placeholder="-- Awaiting source slop..."></textarea>
+    </div>
+    <div class="pane">
+        <div class="pane-label">Obfuscated.lua</div>
+        <textarea id="output-view" readonly placeholder="-- Encrypted payload will appear here..."></textarea>
+    </div>
+</div>
 
-    <main>
-        <div id="steve-logs"></div>
+<div id="steve-logs"></div>
 
-        <div class="editor-container">
-            <textarea id="input" spellcheck="false" placeholder="-- [POBFUS]: Paste Lua code here for flight..."></textarea>
-        </div>
-
-        <div class="btn-row">
-            <button onclick="_011._dl()">Obfuscate & Download</button>
-        </div>
-    </main>
-
-    <script src="script.js"></script>
-
+<script src="script.js"></script>
 </body>
-                       </html>
+</html>
