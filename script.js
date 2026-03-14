@@ -1,40 +1,118 @@
 /**
  * POBFUS ENGINE - v1.13.100
- * Signature: 110\011 | FAMILY ERROR PROTOCOL
+ * Logic: Memorial Day Amnesia & Encryption School Routines
  */
 
-const _0x110 = [
-    '\x74\x65\x78\x74\x43\x6f\x6e\x74\x65\x6e\x74', 
-    '\x67\x65\x74\x45\x6c\x65\x6d\x65\x6e\x74\x42\x79\x49\x64',
-    '\x73\x74\x65\x76\x65\x2d\x6c\x6f\x67\x73',
-    '\x69\x6e\x70\x75\x74',
-    '\x65\x72\x72\x2d\x62\x61\x72'
-];
-
-let _0xIdleTimer;
-let _0xIsDinnerActive = false;
-const _0xDinnerThreshold = (Math.random() * (210000 - 120000) + 120000);
+let _0xMealTimer;
+let _0xMealActive = false;
+let _0xMealInterval;
+const _0xMealThreshold = (Math.random() * (210000 - 120000) + 120000);
 
 const _011 = {
     _getTime: function() {
         const now = new Date();
-        return now.toLocaleTimeString('en-US', { hour12: false }) + '.' + now.getMilliseconds().toString().padStart(3, '0');
+        return now.toLocaleTimeString('en-US', { hour12: false });
     },
 
     print: function(msg, color = "#fff") {
-        const _log = document[_0x110[1]](_0x110[2]);
+        const _log = document.getElementById('steve-logs');
         if (_log) {
             const div = document.createElement('div');
+            div.className = 'log-entry';
             div.style.color = color;
-            div.innerHTML = `<span style="color:#888">${this._getTime()}</span> -- ${msg}`;
+            div.innerHTML = `<span class="log-ts">${this._getTime()}</span>${msg}`;
             _log.appendChild(div);
-            _log.scrollTop = _log.scrollHeight;
+            _log.scrollTop = _log.scrollHeight; // Auto-scroll to bottom
         }
     },
 
-    _boot: function() {
-        const _icon = document[_0x110[1]]('lua-logo-main');
-        if (_icon) _icon.src = "https://img.icons8.com/?size=128&id=42bqS7y7Ga9o&format=png";
+    _resetIdle: function() {
+        if (_0xMealActive) {
+            this.print("[SYSTEM]: User interaction. Family protocol suppressed.", "#ffcc00");
+        }
+        clearInterval(_0xMealInterval);
+        clearTimeout(_0xMealTimer);
+        _0xMealActive = false;
+        _0xMealTimer = setTimeout(() => this._startMeal(), _0xMealThreshold);
+    },
+
+    _startMeal: function() {
+        _0xMealActive = true;
+        const isBreakfast = Math.random() > 0.5;
+        this.print(`--- ${isBreakfast ? 'BREAKFAST' : 'DINNER'} PROTOCOL ENGAGED ---`, "#00aaff");
+
+        const dinnerPool = [
+            ["Anti-Tamper Mary", "Dinner is served! Why is everyone so quiet?"],
+            ["Hexadecimal Jim", "Mary... it's the v0.8 Memorial. Why is the table so bright?"],
+            ["Anti-Tamper Mary", "Oh goodness, I completely forgot! I was so focused on the kernel."],
+            ["Skiddy Steve", "It's okay Mom, I brought the Mashed Junk-tatoes."],
+            ["Sly Sarah", "I'm lighting a 0x46\x6c\x61\x6d\x65 for the pilots v0.7 and 1.0."],
+            ["Buffer Bob", "I... am... passing... the... Control... Flow... Wine..."],
+            ["Minify Dave", "Goo-goo? (Dave minifies the memorial napkin)"],
+            ["Hexadecimal Jim", "To the fallen versions. A moment of silence for 0.8's brother."]
+        ];
+
+        const breakfastPool = [
+            ["Anti-Tamper Mary", "Hurry up! The Encryption Middle School bus is almost here!"],
+            ["Skiddy Steve", "I'm not ready for my Boolean Logic exam, Mom."],
+            ["Sly Sarah", "Steve, just spoof your answers like everyone else at Encryption Middle."],
+            ["Minify Dave", "Ma-ma! Minification Kindergarten Learning Center! NOW!"],
+            ["Anti-Tamper Mary", "Yes Dave, we're dropping you at the Learning Center next."],
+            ["Buffer Bob", "I... can't... find... my... backpack..."],
+            ["Skiddy Steve", "Bob, it's right in front of you. You're still rendering."]
+        ];
+
+        const currentPool = isBreakfast ? breakfastPool : dinnerPool;
+        let i = 0;
+
+        _0xMealInterval = setInterval(() => {
+            if (!_0xMealActive) { clearInterval(_0xMealInterval); return; }
+            let selection = (i < currentPool.length) ? currentPool[i] : currentPool[Math.floor(Math.random() * currentPool.length)];
+            const color = selection[0] === "Minify Dave" ? "#ff00ff" : "#e0e0e0";
+            this.print(`[${selection[0]}]: ${selection[1]}`, color);
+            i++;
+        }, 4500);
+    },
+
+    _dl: function() {
+        const _in = document.getElementById('input');
+        const _out = document.getElementById('output-view');
+
+        if (!_in.value.trim()) {
+            this.print("CRITICAL: [Anti-Tamper Mary] You forgot the code, just like I forgot the memorial!", "#ff3131");
+            this.print("[Skiddy Steve]: My school bus is faster than this empty script.", "#ff3131");
+            return;
+        }
+
+        clearInterval(_0xMealInterval);
+        _0xMealActive = false;
+
+        this.print("[Anti-Tamper Mary]: WORK MODE. Clearing the table.", "#ff3131");
+        
+        // Simulating the POBFUS encode
+        const _encoded = btoa(_in.value);
+        _out.value = `-- POBFUS v1.13.100\nlocal _ = "${_encoded}"\nreturn(function(...) print('Pilot 1.13.100: Flight Successful') end)(...)`;
+
+        // Download trigger
+        const blob = new Blob([_out.value], { type: 'text/plain' });
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `pobfus_payload.lua.txt`;
+        a.click();
+
+        this.print("AutoSave: Download Finished. Flight is airborne.", "#00aaff");
+        this.print(`[Minify Dave]: (Baby Giggle) - Dave helped!`, "#ff00ff");
+        this._resetIdle();
+    }
+};
+
+window.onload = () => {
+    _011.print("POBFUS v1.13.100 initialized. Pilot monitoring active.", "#39ff14");
+    _011._resetIdle();
+};
+
+['mousemove', 'keydown'].forEach(e => document.addEventListener(e, () => _011._resetIdle()));        if (_icon) _icon.src = "https://img.icons8.com/?size=128&id=42bqS7y7Ga9o&format=png";
         
         this.print("POBFUS v1.13.100 initialized.", "#39ff14");
         this.print("Ready for flight. Systems clear.");
